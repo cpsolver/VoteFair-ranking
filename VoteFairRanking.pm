@@ -1,16 +1,14 @@
 package VoteFairRanking;
 
-
 #  remove-from-cpan-version-end
 #  uncomment-for-cpan-version-begin
 # package Voting::VoteFairRanking;
-#
-# use warnings;
+
 # use strict;
+# use warnings;
 # require Exporter;
-
-
 #  uncomment-for-cpan-version-end
+
 =head1 NAME
 
 Voting::VoteFairRanking - Calculates VoteFair Ranking results
@@ -2956,67 +2954,69 @@ employees), and for music or movie fans ranking
 a list of 100 (or more) songs or movies.  It is
 also used to estimate the ranking before doing
 the VoteFair insertion-sort popularity ranking
-calculations.  If access to a computer is not
-available, this CSPS method can be done
-manually (or with a set of calculators).
+calculations.  (If access to a computer is not
+available, this CSPS method can be done using
+pen and paper and a calculator.)
 
-Here is a description of the VoteFair
-choice-specific-score popularity sorting
-algorithm:
+Concise description:
 
-Initially a "row" sum and a "column" sum is
-calculated for each choice.  A specified
-choice's row sum is the sum of pairwise counts
+A row score and a column score
+is calculated for each choice.
+The row score is the sum of the pairwise counts
 in which the specified choice is preferred over
-each of the other choices.  The specified
-choice's column sum is the sum of pairwise
-counts in which the other choice is preferred
-over the specified choice.
+each of the other choices.  The column
+score is the sum of the pairwise counts in
+which the other choice is preferred over the
+specified choice.
 
-For the choices that have not yet been sorted,
-all the row sums are compared to find the
-highest row sum.  The choice that has the
-highest row sum is moved to the most-popular or
-next-most popular position in the sorted list.
-See the example below for clarification.
+For the choices that have not yet been
+ranked, all the row scores are compared to find
+the highest row score.  The choice
+that has the highest row score is moved to the
+most-popular or next-most popular position in
+the ranking results.
 
-If more than one choice is tied with the
-highest row sum, the choice with the smallest
-column sum is chosen.  If more than one choice
-has the same row sum and the same column sum,
-the choices are regarded as tied.
+If more than one choice is
+tied with the highest row score, the
+choice with the smallest column score is
+chosen.  If more than one choice has the
+same row score and the same column score, the
+choices are regarded as tied.
 
-After each choice has been moved into the
-sorted portion of the list, the sums for the
-remaining (unsorted) choices are adjusted by
-subtracting from all the remaining sums the
-pairwise counts that involve the just-sorted choice.
+After each choice has been ranked, the
+scores for the remaining (unranked) choices are
+adjusted by subtracting from all the
+remaining scores the pairwise counts that
+involve the just-ranked choice.
 
-The process of sorting each choice and
-adjusting the remaining sums is repeated until
-only one choice remains unsorted, and it is
-regarded as least popular.
+The process of ranking each choice and
+adjusting the remaining scores is
+repeated until only one choice remains,
+and it is ranked in the bottom (least-popular)
+position.
 
-Here is a description of this calculation
-method:
+Example:
 
-Consider an example in which there are five
-choices: A, B, C, D, E, and the final sort
-order is this alphabetical order.
+Consider an election (or survey) in which
+there are five choices: A, B, C, D, E, and the
+final ranking order is this alphabetical
+order.
 
-Notation:  The notation A>B refers to how many
-voters pairwise prefer choice A over choice B,
-and the notation B>A refers to how many voters
-pairwise prefer choice B over choice A.  This
+In this example the notation A>B
+refers to how many voters pairwise prefer
+choice A over choice B, and the notation
+B>A refers to how many voters pairwise
+prefer choice B over choice A.  This
 notation always uses the "greater-than" symbol
-">", and never uses the "less-than" symbol "<"
--- because, for example, B>A is used instead of
-A<B.
+">", and never uses the "less-than" symbol
+"<" &mdash; because, for example, B>A is
+used instead of A<B.
 
-At the beginning of this sorting example,
+At the beginning of this ranking example,
 suppose that the choices are arranged in the
-order C, E, A, D, B.  The pairwise counts for
-this arrangement is shown below.
+order C, E, A, D, B.  The pairwise counts
+for this arrangement are shown in this pairwise
+matrix.
 
 
       |       |       |       |       |       |
@@ -3045,45 +3045,53 @@ this arrangement is shown below.
  -----+-------+-------+-------+-------+-------+
 
 
-The diagonal line passes through empty cells --
-that would otherwise represent a choice's
-comparison with itself, such as A>A.
+The diagonal line passes through empty
+cells.  These cells are empty because they
+would represent a choice's comparison with
+itself, such as A>A.
 
-The goal of these calculations is to change the
-sequence so that the largest pairwise counts
-move into the upper-right triangular area,
-leaving the smallest pairwise counts in the
-lower-left triangular area.
+The goal of these calculations is to change
+the sequence so that the largest pairwise
+counts move into the upper-right triangular
+area, leaving the smallest pairwise counts in
+the lower-left triangular area.  (This is
+the goal of VoteFair popularity ranking.)
 
-The first step is to calculate the
+The first step is to calculate
 choice-specific scores, with each choice having
-a row score and a column score. For choice A,
-its row score equals the sum of the pairwise
-counts in the row labelled A, which equals
-A>B + A>C + A>D + A>E. The column score for
-choice A is the sum of the pairwise counts in
-the column labeled A, which equals
-B>A + C>A + D>A + E>A. The sum of the numbers
-in each other row and column are also calculated.
+a row score and a column
+score.  For choice A, its row score
+equals the sum of the pairwise counts in the
+row labelled A, which equals A>B +
+A>C + A>D + A>E.  The column
+score for choice A is the sum of the
+pairwise counts in the column labeled A,
+which equals B>A + C>A + D>A +
+E>A.  The row scores and column scores
+for choices B, C, D, and E are calculated
+similarly.
 
-Next, all the row sums are compared to find the
-largest row sum. That sum would be the row sum
-for choice A.  The associated choice for that
-highest row sum -- choice A -- is moved into
-first place.  The other choices remain in the
-same order.  The resulting sequence is
-A, C, E, D, B.  Here is the new arrangement for
-the new sequence, with the pairwise counts for
-the sorted choice surrounded by asterisks:
+Next, all the row scores are compared to
+determine which choice has the largest row
+score.  In this example that score
+would be the row score for choice A (because it
+is first in alphabetical order).
+Therefore choice A is moved into first
+place.  The other choices remain in the
+same order.  The resulting sequence is A,
+C, E, D, B.  Here is the new arrangement
+for the new sequence.  The pairwise counts
+for the ranked choice (A) are surrounded by
+asterisks:
 
 
       |       |       |       |       |       |
       |   A   |   C   |   E   |   D   |   B   |
       |       |       |       |       |       |
  -----*****************************************
-      * \     |       |       |       |       |
-  A   *   \   |  A>C  |  A>E  |  A>D  |  A>B  |
-      *     \ |       |       |       |       |
+      * \     |       |       |       |       *
+  A   *   \   |  A>C  |  A>E  |  A>D  |  A>B  *
+      *     \ |       |       |       |       *
  -----*-------*********************************
       *       * \     |       |       |       |
   C   *  C>A  *   \   |  C>E  |  C>D  |  C>B  |
@@ -3100,45 +3108,49 @@ the sorted choice surrounded by asterisks:
       *       *       |       |       | \     |
   B   *  B>A  *  B>C  |  B>E  |  B>D  |   \   |
       *       *       |       |       |     \ |
- -----*-------*-------+-------+-------+-------+
+ -----*********-------+-------+-------+-------+
 
 
 The row scores and column scores for the
-remaining (unsorted) choices are adjusted to
-remove the pairwise counts that involve choice
-A.  For example, after subtracting B>A, the row
-score for choice B becomes B>C + B>D + B>E.
+remaining (unranked) choices are adjusted to
+remove the pairwise counts that involve the
+just-ranked choice (A).  The removed
+pairwise counts are the ones surrounded by
+asterisks.  Specifically, after
+subtracting B>A, the row score for choice B
+becomes B>C + B>D + B>E, and after
+subtracting A>B, the column score for choice
+B becomes C>B + D>B + E>B.
 
-From among the remaining row scores the highest
-score is searched for. At this point let's
-assume that both choice B and choice C have the
-same highest score.
+From among the remaining row scores the
+highest score is searched for.  At this
+point let's assume that both choice B and
+choice C have the same highest row score.
 
-Because there is a row-score tie, the column
-scores are also considered. The smallest column
-score -- from among the choices that have the
-same largest row score -- identifies the next
-choice in the sorted sequence.  This would be
-choice B.  Therefore, choice B is moved to the
-sequence positioin just after choice A.  The
+In the case of a row-score tie, the
+choice with the smallest column score &mdash;
+from among the choices that have the same
+largest row score &mdash; is ranked
+next.  This would be choice B.
+Therefore, choice B is moved to the sequence
+position just after choice A.  The
 resulting sequence is A, B, C, E, D.
-
 Below is the new arrangement for the new
-sequence.  The pairwise counts for the sorted
-choices are surrounded by asterisks:
+sequence.  The pairwise counts for the
+ranked choices are surrounded by asterisks:
 
 
       |       |       |       |       |       |
       |   A   |   B   |   C   |   E   |   D   |
       |       |       |       |       |       |
  -----*****************************************
-      * \     |       |       |       |       |
-  A   *   \   |  A>B  |  A>C  |  A>E  |  A>D  |
-      *     \ |       |       |       |       |
- -----*-------+-------+-------+-------+-------+
-      *       | \     |       |       |       |
-  B   *  B>A  |   \   |  B>C  |  B>E  |  B>D  |
-      *       |     \ |       |       |       |
+      * \     |       |       |       |       *
+  A   *   \   |  A>B  |  A>C  |  A>E  |  A>D  *
+      *     \ |       |       |       |       *
+ -----*-------+-------+-------+-------+-------*
+      *       | \     |       |       |       *
+  B   *  B>A  |   \   |  B>C  |  B>E  |  B>D  *
+      *       |     \ |       |       |       *
  -----*-------+--------************************
       *       |       * \     |       |       |
   C   *  C>A  |  C>B  *   \   |  C>E  |  C>D  |
@@ -3151,19 +3163,20 @@ choices are surrounded by asterisks:
       *       |       *       |       | \     |
   D   *  D>A  |  D>B  *  D>C  |  D>E  |   \   |
       *       |       *       |       |     \ |
- -----*-------+-------*-------+-------+-------+
+ -----*****************-------+-------+-------+
 
 
-The same sorting process is repeated.  The next
-choice to be sorted would be choice D.  It
-would have the highest row score -- and the
-smallest column score if there is a row-score
-tie. Then choice D would be identifed as the
-next choice in the sorted sequence.  The only
-remaining choice, choice E, would be sorted
-into the last position.
+The same ranking process is repeated.
+The next choice to be ranked would be choice
+D.  It would have the highest row score
+&mdash; and the smallest column score if there
+is a row-score tie.  So choice D would be
+identifed as the next choice in the ranked
+sequence.  The only remaining choice,
+choice E, would be ranked at the last (lowest)
+position.
 
-Here is the final sorted arrangement:
+Here is the final ranked arrangement:
 
 
       |       |       |       |       |       |
@@ -3192,42 +3205,14 @@ Here is the final sorted arrangement:
  -----*****************************************
 
 
-This choice-specific pairwise-score (CSPS)
-ranking method always ranks the "Condorcet
-winner" as the first choice -- if there is a
-Condorcet winner.  The Condorcet winner is the
-choice that would win all of its pairwise
-contests if the choices competed in one-on-one
-(pairwise) contests.
+The choices are now fully ranked.  If
+only a single winner is needed, the
+first-ranked choice would be selected as the
+winner.
 
-If this choice-specific pairwise-score ranking
-method does not encounter any (full) ties -- in
-which more than one choice has the same highest
-row score and the same lowest column score --
-then the method produces the same ranking as
-VoteFair popularity ranking (which produces the
-same ranking as Condorcet-Kemeny ranking).
-
-If this choice-specific pairwise-score ranking
-method is used with paper ballots, the scores
-can be counted manually, without a computer, or
-can be calculated using twice the number of
-calculators as the number of choices.  In this
-case a choice's row score is increased by the
-number of  choices that are ranked lower (than
-the choice being scored), and the choice's
-column score is increased by the number of
-choices that are ranked higher (than the choice
-being scored).  This convention works even when
-a ballot indicates that more than one choice at
-the same preference level (in which case the
-choices at that same level do not contribute to
-the row scores or column scores of the other
-choices at the same level).  If a voter does
-not rank some of the choices, the unranked
-choices are assumed to be ranked together at
-the bottom, and lower than the bottom-ranked
-choice(s).
+(This description of the VoteFair choice-specific
+pairwise-score method was copied from
+www.VoteFair.org with permission.)
 
 =cut
 
