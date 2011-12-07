@@ -18,11 +18,11 @@ Voting::VoteFairRanking - Calculates VoteFair Ranking results
 
 =head1 VERSION
 
-Version 4.90
+Version 5.00
 
 =cut
 
-our $VERSION = '4.90' ;
+our $VERSION = '5.00' ;
 
 
 =head1 SYNOPSIS
@@ -207,6 +207,19 @@ The following subroutines are exported:
 #
 #  Version 4.9 -- In 2011 this module was added
 #  to Perl's CPAN archives.
+#
+#  Version 5.0 -- In 2011 (December) the
+#  calc_votefair_choice_specific_pairwise_score_popularity_rank
+#  and
+#  calc_votefair_insertion_sort_popularity_rank
+#  subroutines were added.  These subroutines,
+#  when used together, calculate VoteFair
+#  popularity ranking results fast -- in
+#  "polynomial time".  These two subroutines
+#  were developed during the year 2011, as
+#  improvements over the also-fast calculation
+#  subroutine used at VoteFair.org since about
+#  the year 2000.
 
 
 #-----------------------------------------------
@@ -397,9 +410,6 @@ my @global_rank_to_normalize_for_adjusted_choice ;
 
 my %global_code_number_for_letters ;
 
-
-#  remove-from-cpan-version-begin
-
 my $global_scale_for_logged_pairwise_counts ;
 my $global_comparison_count ;
 my $global_sequence_score ;
@@ -413,7 +423,6 @@ my @global_choice_score_popularity_rank_for_actual_choice ;
 my @global_insertion_sort_popularity_rank_for_actual_choice ;
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #-----------------------------------------------
 #  Indicate whether the first actions of this
@@ -1508,7 +1517,6 @@ sub calc_votefair_popularity_rank
     $global_actual_choice_at_top_popularity_ranking_level = 0 ;
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  Initialize the insertion-sort rankings to zeros,
 #  which indicate that no ranking has been done.
@@ -1523,7 +1531,6 @@ sub calc_votefair_popularity_rank
     }
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  If the total of the vote counts is zero,
 #  there is a code bug, so indicate an error.
@@ -1549,7 +1556,6 @@ sub calc_votefair_popularity_rank
     }
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  Do VoteFair choice-specific pairwise-score
 #  (CSPS) ranking.
@@ -1587,7 +1593,6 @@ sub calc_votefair_popularity_rank
 #  be resolved.
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  If there are too many choices, or if there
 #  are too many ballots that could combine with
@@ -1618,7 +1623,6 @@ sub calc_votefair_popularity_rank
     }
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  If the full-score calculations were not done,
 #  and the insertion-sort calculations were done,
@@ -1649,7 +1653,6 @@ sub calc_votefair_popularity_rank
     }
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  If the full-score calculations were not done,
 #  create a warning message that applies to the
@@ -1710,7 +1713,6 @@ sub calc_votefair_popularity_rank
     }
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  Compare the results with other calculation
 #  methods.
@@ -1718,7 +1720,6 @@ sub calc_votefair_popularity_rank
     &compare_popularity_results( ) ;
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  End of subroutine.
 
@@ -2934,7 +2935,6 @@ sub calc_votefair_party_rank
 
 
 
-#  remove-from-cpan-version-begin
 
 =head2 calc_votefair_choice_specific_pairwise_score_popularity_rank
 
@@ -3009,8 +3009,7 @@ B>A refers to how many voters pairwise
 prefer choice B over choice A.  This
 notation always uses the "greater-than" symbol
 ">", and never uses the "less-than" symbol
-"<" &mdash; because, for example, B>A is
-used instead of A<B.
+"<".
 
 At the beginning of this ranking example,
 suppose that the choices are arranged in the
@@ -3128,9 +3127,9 @@ point let's assume that both choice B and
 choice C have the same highest row score.
 
 In the case of a row-score tie, the
-choice with the smallest column score &mdash;
+choice with the smallest column score --
 from among the choices that have the same
-largest row score &mdash; is ranked
+largest row score -- is ranked
 next.  This would be choice B.
 Therefore, choice B is moved to the sequence
 position just after choice A.  The
@@ -3168,13 +3167,14 @@ ranked choices are surrounded by asterisks:
 
 The same ranking process is repeated.
 The next choice to be ranked would be choice
-D.  It would have the highest row score
-&mdash; and the smallest column score if there
-is a row-score tie.  So choice D would be
+C.  It would have the highest row score
+-- and the smallest column score if there
+is a row-score tie.  So choice C would be
 identifed as the next choice in the ranked
-sequence.  The only remaining choice,
-choice E, would be ranked at the last (lowest)
-position.
+sequence.  After that, choice D would have the
+highest row score, and would be ranked next.
+Finally the only remaining choice, choice E,
+would be ranked at the last (lowest) position.
 
 Here is the final ranked arrangement:
 
@@ -3858,8 +3858,6 @@ sub calc_votefair_choice_specific_pairwise_score_popularity_rank
 }
 
 
-#  remove-from-cpan-version-end
-#  remove-from-cpan-version-begin
 
 =head2 calc_votefair_insertion_sort_popularity_rank
 
@@ -3912,9 +3910,7 @@ voters pairwise prefer choice A over choice B,
 and the notation B>A refers to how many voters
 pairwise prefer choice B over choice A.  This
 notation always uses the "greater-than" symbol
-">", and never uses the "less-than" symbol "<"
--- because, for example, B>A is used instead of
-A<B.
+">", and never uses the "less-than" symbol "<".
 
 At an intermediate stage in this sorting
 example, suppose that the choices A, C, and E
@@ -5544,7 +5540,6 @@ sub calc_votefair_insertion_sort_popularity_rank
 
 
 
-#  remove-from-cpan-version-end
 =head2 calc_all_sequence_scores
 
 (Not exported, for internal use only.)
@@ -5910,7 +5905,6 @@ sub calc_all_sequence_scores
                     print LOGOUT $actual_choice . " , " ;
                 }
                 print LOGOUT "  has high score of " . $highest_score . "]\n" ;
-#  remove-from-cpan-version-begin
                 if ( $main_loop_count == 1 )
                 {
                     $global_sequence_score_using_all_scores_method = 0 ;
@@ -5918,7 +5912,6 @@ sub calc_all_sequence_scores
                 print LOGOUT "[all scores, current top or score-matched ranking:]\n" ;
                 &internal_view_matrix( ) ;
                 $global_sequence_score_using_all_scores_method = $global_sequence_score ;
-#  remove-from-cpan-version-end
             }
 
 
@@ -6005,7 +5998,6 @@ sub calc_all_sequence_scores
     }
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  For debugging, display the tally numbers in
 #  an array/matrix arrangement.
@@ -6020,7 +6012,6 @@ sub calc_all_sequence_scores
     }
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  End of subroutine.
 
@@ -6031,8 +6022,6 @@ sub calc_all_sequence_scores
 
 
 
-
-#  remove-from-cpan-version-begin
 
 =head2 compare_popularity_results
 
@@ -6179,7 +6168,6 @@ sub compare_popularity_results
 
 
 
-#  remove-from-cpan-version-end
 =head2 do_full_initialization
 
 (Not exported, for internal use only.)
@@ -7735,7 +7723,6 @@ sub calculate_results_for_one_question
     }
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  Log a display of the tally numbers in
 #  an array version.
@@ -7751,7 +7738,6 @@ sub calculate_results_for_one_question
     }
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  Unless suppressed, output the pairwise counts
 #  -- while the pairwise counts for all the
@@ -7822,7 +7808,6 @@ sub calculate_results_for_one_question
     if ( $global_logging_info == $global_true ) { print LOGOUT "[one question, if only one top choice, choice number is " . $global_actual_choice_at_top_of_full_popularity_ranking . "]\n" } ;
 
 
-#  remove-from-cpan-version-begin
 #-----------------------------------------------
 #  Log a display of the tally numbers with the
 #  choices in popularity ranking sequence.
@@ -7846,7 +7831,6 @@ sub calculate_results_for_one_question
     }
 
 
-#  remove-from-cpan-version-end
 #-----------------------------------------------
 #  Determine how many levels of representation
 #  ranking should be done.
@@ -8504,7 +8488,6 @@ sub add_preferences_to_tally_table
 
 
 
-#  remove-from-cpan-version-begin
 
 =head2 internal_view_matrix
 
@@ -8629,7 +8612,6 @@ sub internal_view_matrix
 
 
 
-#  remove-from-cpan-version-end
 =head2 normalize_ranking
 
 (Not exported, for internal use only.)
