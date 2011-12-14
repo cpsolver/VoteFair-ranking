@@ -283,13 +283,7 @@ $global_being_tested = "seven choices and ballots -- ";
 
 $global_vote_info = "request-rep  request-party  request-no-pairwise-counts  case 1 q 1 choices 7  x 1 q 1 1 2 tie 3  x 1 q 1 3 2 5  x 1 q 1 6 4 2  x 1 q 1 1 3 5  x 1 q 1 5 4 3 2  x 1 q 1 6 4 5 1 2  x 1 q 1 5 1 2 3";
 
-#  remove-from-cpan-version-begin
 $global_expected_result = "case 1 q 1 plurality ch 1 plur 2 ch 2 plur 0 ch 3 plur 1 ch 4 plur 0 ch 5 plur 2 ch 6 plur 2 ch 7 plur 0 end-plurality popularity-levels ch 1 level 2 ch 2 level 3 ch 3 level 3 ch 4 level 5 ch 5 level 1 ch 6 level 4 ch 7 level 6 end-pop-levels popularity-sequence ch 5 next-level ch 1 next-level ch 2 tie ch 3 next-level ch 6 next-level ch 4 next-level ch 7 end-pop-seq rep-levels ch 1 level 2 ch 2 level 3 ch 3 level 3 ch 4 level 4 ch 5 level 1 ch 6 level 4 ch 7 level 4 end-rep-levels rep-seq ch 5 next-level ch 1 next-level ch 2 tie ch 3 next-level ch 4 tie ch 6 tie ch 7 end-rep-seq party-levels ch 1 level 2 ch 2 level 6 ch 3 level 4 ch 4 level 5 ch 5 level 1 ch 6 level 3 ch 7 level 7 end-party-levels party-seq ch 5 next-level ch 1 next-level ch 6 next-level ch 3 next-level ch 4 next-level ch 2 next-level ch 7 end-party-seq votes 7 endallcases";
-#  remove-from-cpan-version-end
-
-#  uncomment-for-cpan-version-begin
-# $global_expected_result = "case 1 q 1 plurality ch 1 plur 2 ch 2 plur 0 ch 3 plur 1 ch 4 plur 0 ch 5 plur 2 ch 6 plur 2 ch 7 plur 0 end-plurality votes 7 endallcases";
-#  uncomment-for-cpan-version-end
 
 &do_test( );
 
@@ -300,13 +294,7 @@ $global_being_tested = "eight choices and ballots -- ";
 
 $global_vote_info = "request-rep  request-party  request-no-pairwise-counts  case 1 q 1 choices 8  x 1 q 1 7 1 3 2 4 5 6  x 1 q 1 3 4 5 2  x 1 q 1 2 6 1 2  x 1 q 1 2 4 1 3  x 1 q 1 2 4 5 3 1  x 1 q 1 6 2 3 4  x 1 q 1 7 1 3 2 4 5  x 1 q 1 8 3 4 2 5 1";
 
-#  remove-from-cpan-version-begin
 $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 3 ch 3 plur 1 ch 4 plur 0 ch 5 plur 0 ch 6 plur 1 ch 7 plur 2 ch 8 plur 1 end-plurality popularity-levels ch 1 level 3 ch 2 level 1 ch 3 level 1 ch 4 level 2 ch 5 level 4 ch 6 level 5 ch 7 level 5 ch 8 level 6 end-pop-levels popularity-sequence ch 2 tie ch 3 next-level ch 4 next-level ch 1 next-level ch 5 next-level ch 6 tie ch 7 next-level ch 8 end-pop-seq rep-levels ch 1 level 2 ch 2 level 1 ch 3 level 1 ch 4 level 2 ch 5 level 2 ch 6 level 2 ch 7 level 2 ch 8 level 2 end-rep-levels rep-seq ch 2 tie ch 3 next-level ch 1 tie ch 4 tie ch 5 tie ch 6 tie ch 7 tie ch 8 end-rep-seq party-levels ch 1 level 3 ch 2 level 1 ch 3 level 1 ch 4 level 4 ch 5 level 5 ch 6 level 6 ch 7 level 6 ch 8 level 7 end-party-levels party-seq ch 2 tie ch 3 next-level ch 1 next-level ch 4 next-level ch 5 next-level ch 6 tie ch 7 next-level ch 8 end-party-seq votes 8 endallcases";
-#  remove-from-cpan-version-end
-
-#  uncomment-for-cpan-version-begin
-# $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 3 ch 3 plur 1 ch 4 plur 0 ch 5 plur 0 ch 6 plur 1 ch 7 plur 2 ch 8 plur 1 end-plurality votes 8 endallcases";
-#  uncomment-for-cpan-version-end
 
 &do_test( );
 
@@ -317,13 +305,7 @@ $global_being_tested = "nine choices -- ";
 
 $global_vote_info = "request-rep  request-party  request-no-pairwise-counts  case 1 q 1 choices 9  x 1 q 1 9 2 3 4 5 1  x 1 q 1 8 2 3 5 6 4  x 1 q 1 7 2 4 3 5 1  x 1 q 1 6 1 2 4 3  x 1 q 1 5 3 8 2 4  x 1 q 1 4 2 8 4 6  x 1 q 1 4 8 9 2 7 3  x 1 q 1 3 2 9 3 7  x 1 q 1 2 4 9 8 4 5  x 1 q 1 1 3 6 8 9 2 4 5";
 
-#  remove-from-cpan-version-begin
 $global_expected_result = "case 1 q 1 plurality ch 1 plur 1 ch 2 plur 1 ch 3 plur 1 ch 4 plur 2 ch 5 plur 1 ch 6 plur 1 ch 7 plur 1 ch 8 plur 1 ch 9 plur 1 end-plurality popularity-levels ch 1 level 8 ch 2 level 1 ch 3 level 2 ch 4 level 4 ch 5 level 6 ch 6 level 7 ch 7 level 9 ch 8 level 3 ch 9 level 5 end-pop-levels popularity-sequence ch 2 next-level ch 3 next-level ch 8 next-level ch 4 next-level ch 9 next-level ch 5 next-level ch 6 next-level ch 1 next-level ch 7 end-pop-seq rep-levels ch 1 level 0 ch 2 level 1 ch 3 level 2 ch 4 level 4 ch 5 level 6 ch 6 level 0 ch 7 level 0 ch 8 level 3 ch 9 level 5 end-rep-levels rep-seq ch 2 next-level ch 3 next-level ch 8 next-level ch 4 next-level ch 9 next-level ch 5 end-seq-early end-rep-seq party-levels ch 1 level 4 ch 2 level 1 ch 3 level 2 ch 4 level 3 ch 5 level 4 ch 6 level 4 ch 7 level 4 ch 8 level 3 ch 9 level 4 end-party-levels party-seq ch 2 next-level ch 3 next-level ch 4 tie ch 8 next-level ch 1 tie ch 5 tie ch 6 tie ch 7 tie ch 9 end-party-seq votes 10 endallcases";
-#  remove-from-cpan-version-end
-
-#  uncomment-for-cpan-version-begin
-# $global_expected_result = "case 1 q 1 plurality ch 1 plur 1 ch 2 plur 1 ch 3 plur 1 ch 4 plur 2 ch 5 plur 1 ch 6 plur 1 ch 7 plur 1 ch 8 plur 1 ch 9 plur 1 end-plurality votes 10 endallcases";
-#  uncomment-for-cpan-version-end
 
 &do_test( );
 
@@ -334,13 +316,7 @@ $global_being_tested = "ten choices -- ";
 
 $global_vote_info = "request-rep  request-party  request-no-pairwise-counts  case 1 q 1 choices 10  x 3 q 1 10 7 6 4 8 2 3  x 3 q 1 3 8 5 9 1 3 2  x 4 q 1 3 2 8 10 4 5";
 
-#  remove-from-cpan-version-begin
 $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 0 ch 3 plur 7 ch 4 plur 0 ch 5 plur 0 ch 6 plur 0 ch 7 plur 0 ch 8 plur 0 ch 9 plur 0 ch 10 plur 3 end-plurality popularity-levels ch 1 level 8 ch 2 level 3 ch 3 level 2 ch 4 level 5 ch 5 level 6 ch 6 level 8 ch 7 level 7 ch 8 level 1 ch 9 level 7 ch 10 level 4 end-pop-levels popularity-sequence ch 8 next-level ch 3 next-level ch 2 next-level ch 10 next-level ch 4 next-level ch 5 next-level ch 7 tie ch 9 next-level ch 1 tie ch 6 end-pop-seq rep-levels ch 1 level 0 ch 2 level 3 ch 3 level 2 ch 4 level 5 ch 5 level 6 ch 6 level 0 ch 7 level 0 ch 8 level 1 ch 9 level 0 ch 10 level 4 end-rep-levels rep-seq ch 8 next-level ch 3 next-level ch 2 next-level ch 10 next-level ch 4 next-level ch 5 end-seq-early end-rep-seq party-levels ch 1 level 8 ch 2 level 4 ch 3 level 2 ch 4 level 6 ch 5 level 3 ch 6 level 8 ch 7 level 7 ch 8 level 1 ch 9 level 7 ch 10 level 5 end-party-levels party-seq ch 8 next-level ch 3 next-level ch 5 next-level ch 2 next-level ch 10 next-level ch 4 next-level ch 7 tie ch 9 next-level ch 1 tie ch 6 end-party-seq votes 10 endallcases";
-#  remove-from-cpan-version-end
-
-#  uncomment-for-cpan-version-begin
-# $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 0 ch 3 plur 7 ch 4 plur 0 ch 5 plur 0 ch 6 plur 0 ch 7 plur 0 ch 8 plur 0 ch 9 plur 0 ch 10 plur 3 end-plurality votes 10 endallcases";
-#  uncomment-for-cpan-version-end
 
 &do_test( );
 
@@ -351,13 +327,7 @@ $global_being_tested = "eleven choices -- ";
 
 $global_vote_info = "request-rep  request-party  request-no-pairwise-counts  case 1 q 1 choices 11   x 6 q 1 5 11 2 10 8 9 6  x 5 q 1 2 1 10 tie 11 6 3 5";
 
-#  remove-from-cpan-version-begin
 $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 5 ch 3 plur 0 ch 4 plur 0 ch 5 plur 6 ch 6 plur 0 ch 7 plur 0 ch 8 plur 0 ch 9 plur 0 ch 10 plur 0 ch 11 plur 0 end-plurality popularity-levels ch 1 level 8 ch 2 level 3 ch 3 level 9 ch 4 level 10 ch 5 level 1 ch 6 level 7 ch 7 level 10 ch 8 level 5 ch 9 level 6 ch 10 level 4 ch 11 level 2 end-pop-levels popularity-sequence ch 5 next-level ch 11 next-level ch 2 next-level ch 10 next-level ch 8 next-level ch 9 next-level ch 6 next-level ch 1 next-level ch 3 next-level ch 4 tie ch 7 end-pop-seq rep-levels ch 1 level 0 ch 2 level 2 ch 3 level 0 ch 4 level 0 ch 5 level 1 ch 6 level 0 ch 7 level 0 ch 8 level 5 ch 9 level 6 ch 10 level 4 ch 11 level 3 end-rep-levels rep-seq ch 5 next-level ch 2 next-level ch 11 next-level ch 10 next-level ch 8 next-level ch 9 end-seq-early end-rep-seq party-levels ch 1 level 8 ch 2 level 2 ch 3 level 2 ch 4 level 2 ch 5 level 1 ch 6 level 7 ch 7 level 2 ch 8 level 5 ch 9 level 6 ch 10 level 4 ch 11 level 3 end-party-levels party-seq ch 5 next-level ch 2 tie ch 3 tie ch 4 tie ch 7 next-level ch 11 next-level ch 10 next-level ch 8 next-level ch 9 next-level ch 6 next-level ch 1 end-party-seq votes 11 endallcases";
-#  remove-from-cpan-version-end
-
-#  uncomment-for-cpan-version-begin
-# $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 5 ch 3 plur 0 ch 4 plur 0 ch 5 plur 6 ch 6 plur 0 ch 7 plur 0 ch 8 plur 0 ch 9 plur 0 ch 10 plur 0 ch 11 plur 0 end-plurality votes 11 endallcases";
-#  uncomment-for-cpan-version-end
 
 &do_test( );
 
@@ -368,13 +338,7 @@ $global_being_tested = "twelve choices -- ";
 
 $global_vote_info = "request-rep  request-party  request-no-pairwise-counts  case 1 q 1 choices 12  x 4 q 1 12 9 3 8 4 2 10 5  x 4 q 1 3 12 2 10 7 3 9 8 4  x 4 q 1 6 10 11 9 7 4 3 12 5 2 8";
 
-#  remove-from-cpan-version-begin
 $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 0 ch 3 plur 4 ch 4 plur 0 ch 5 plur 0 ch 6 plur 4 ch 7 plur 0 ch 8 plur 0 ch 9 plur 0 ch 10 plur 0 ch 11 plur 0 ch 12 plur 4 end-plurality popularity-levels ch 1 level 10 ch 2 level 3 ch 3 level 4 ch 4 level 5 ch 5 level 8 ch 6 level 7 ch 7 level 4 ch 8 level 6 ch 9 level 2 ch 10 level 2 ch 11 level 9 ch 12 level 1 end-pop-levels popularity-sequence ch 12 next-level ch 9 tie ch 10 next-level ch 2 next-level ch 3 tie ch 7 next-level ch 4 next-level ch 8 next-level ch 6 next-level ch 5 next-level ch 11 next-level ch 1 end-pop-seq rep-levels ch 1 level 3 ch 2 level 2 ch 3 level 3 ch 4 level 3 ch 5 level 3 ch 6 level 2 ch 7 level 3 ch 8 level 3 ch 9 level 3 ch 10 level 2 ch 11 level 3 ch 12 level 1 end-rep-levels rep-seq ch 12 next-level ch 2 tie ch 6 tie ch 10 next-level ch 1 tie ch 3 tie ch 4 tie ch 5 tie ch 7 tie ch 8 tie ch 9 tie ch 11 end-rep-seq party-levels ch 1 level 3 ch 2 level 2 ch 3 level 3 ch 4 level 3 ch 5 level 3 ch 6 level 2 ch 7 level 3 ch 8 level 3 ch 9 level 3 ch 10 level 2 ch 11 level 3 ch 12 level 1 end-party-levels party-seq ch 12 next-level ch 2 tie ch 6 tie ch 10 next-level ch 1 tie ch 3 tie ch 4 tie ch 5 tie ch 7 tie ch 8 tie ch 9 tie ch 11 end-party-seq votes 12 endallcases";
-#  remove-from-cpan-version-end
-
-#  uncomment-for-cpan-version-begin
-# $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 0 ch 3 plur 4 ch 4 plur 0 ch 5 plur 0 ch 6 plur 4 ch 7 plur 0 ch 8 plur 0 ch 9 plur 0 ch 10 plur 0 ch 11 plur 0 ch 12 plur 4 end-plurality votes 12 endallcases";
-#  uncomment-for-cpan-version-end
 
 &do_test( );
 
