@@ -2943,30 +2943,244 @@ sub calc_votefair_party_rank
 Calculates VoteFair choice-specific pairwise-score
 (CSPS) popularity ranking results.
 
-This kind of ranking is useful when there are
-many choices and voters only indicate some
-preferences, such as indicating their top 10
-choices, or their top 10 and bottom 10 choices
-(with the remaining choices being tied in the
-middle). For example, it is useful for "HR team
-rankings" (in which managers rank a list of
-employees), and for music or movie fans ranking
-a list of 100 (or more) songs or movies.  It is
-also used to estimate the ranking before doing
-the VoteFair insertion-sort popularity ranking
-calculations.  (If access to a computer is not
-available, this CSPS method can be done using
-pen and paper and a calculator.)
+This kind of ranking is useful for estimating
+the overall ranking when there are many choices
+(such as hundreds of choices) and fast results
+are desired.   It is also used to estimate the
+ranking before doing the VoteFair
+insertion-sort popularity ranking calculations.
+(If access to a computer is not available, this
+CSPS method can be done using pen and paper and
+a calculator.)
 
-Concise description:
+Example:
+
+(A concise description follows this
+example.  The description is easier to
+understand after you have read this example.)
+
+Consider an election (or survey) in which
+there are five choices: A, B, C, D, E, and the
+final ranking order is this alphabetical
+order.
+
+In this example the notation A>B
+refers to how many voters pairwise prefer
+choice A over choice B, and the notation
+B>A refers to how many voters pairwise
+prefer choice B over choice A.  This
+notation always uses the "greater-than" symbol
+">", and never uses the "less-than" symbol
+"<".
+
+At the beginning of this ranking example,
+suppose that the choices are arranged in the
+order C, E, A, D, B.  The pairwise counts
+for this arrangement are shown in this pairwise
+matrix.
+
+      |       |       |       |       |       |
+      |   C   |   E   |   A   |   D   |   B   |
+      |       |       |       |       |       |
+ -----+-------+-------+-------+-------+-------+
+      | \     |       |       |       |       |
+  C   |   \   |  C>E  |  C>A  |  C>D  |  C>B  |
+      |     \ |       |       |       |       |
+ -----+-------+-------+-------+-------+-------+
+      |       | \     |       |       |       |
+  E   |  E>C  |   \   |  E>A  |  E>D  |  E>B  |
+      |       |     \ |       |       |       |
+ -----+-------+-------+-------+-------+-------+
+      |       |       | \     |       |       |
+  A   |  A>C  |  A>E  |   \   |  A>D  |  A>B  |
+      |       |       |     \ |       |       |
+ -----+-------+-------+-------+-------+-------+
+      |       |       |       | \     |       |
+  D   |  D>C  |  D>E  |  D>A  |   \   |  D>B  |
+      |       |       |       |     \ |       |
+ -----+-------+-------+-------+-------+-------+
+      |       |       |       |       | \     |
+  B   |  B>C  |  B>E  |  B>A  |  B>D  |   \   |
+      |       |       |       |       |     \ |
+ -----+-------+-------+-------+-------+-------+
+
+The diagonal line passes through empty
+cells.  These cells are empty because they
+would represent a choice's comparison with
+itself, such as A>A.
+
+The goal of these calculations is to change
+the sequence so that the largest pairwise
+counts move into the upper-right triangular
+area, leaving the smallest pairwise counts in
+the lower-left triangular area.  (This is
+similar to the goal of VoteFair popularity
+ranking.)
+
+The first step is to calculate
+choice-specific scores, with each choice having
+a row score and a column
+score.  For choice A, its row score
+equals the sum of the pairwise counts in the
+row labelled A, which equals A>B +
+A>C + A>D + A>E.  The column
+score for choice A is the sum of the
+pairwise counts in the column labeled A,
+which equals B>A + C>A + D>A +
+E>A.  The row scores and column scores
+for choices B, C, D, and E are calculated
+similarly.
+
+Next, all the row scores are compared to
+determine which choice has the largest row
+score.  In this example that score
+would be the row score for choice A (because it
+is first in alphabetical order).
+Therefore choice A is moved into first
+place.  The other choices remain in the
+same order.  The resulting sequence is A,
+C, E, D, B.  Here is the pairwise matrix
+for the new sequence.  The pairwise counts
+for the ranked choice (A) are surrounded by
+asterisks:
+
+      |       |       |       |       |       |
+      |   A   |   C   |   E   |   D   |   B   |
+      |       |       |       |       |       |
+ -----*****************************************
+      * \     |       |       |       |       *
+  A   *   \   |  A>C  |  A>E  |  A>D  |  A>B  *
+      *     \ |       |       |       |       *
+ -----*-------*********************************
+      *       * \     |       |       |       |
+  C   *  C>A  *   \   |  C>E  |  C>D  |  C>B  |
+      *       *     \ |       |       |       |
+ -----*-------*-------+-------+-------+-------+
+      *       *       | \     |       |       |
+  E   *  E>A  *  E>C  |   \   |  E>D  |  E>B  |
+      *       *       |     \ |       |       |
+ -----*-------*-------+-------+-------+-------+
+      *       *       |       | \     |       |
+  D   *  D>A  *  D>C  |  D>E  |   \   |  D>B  |
+      *       *       |       |     \ |       |
+ -----*-------*-------+-------+-------+-------+
+      *       *       |       |       | \     |
+  B   *  B>A  *  B>C  |  B>E  |  B>D  |   \   |
+      *       *       |       |       |     \ |
+ -----*********-------+-------+-------+-------+
+
+The row scores and column scores for the
+remaining (unranked) choices are adjusted to
+remove the pairwise counts that involve the
+just-ranked choice (A).  The removed
+pairwise counts are the ones surrounded by
+asterisks.  Specifically, after
+subtracting B>A, the row score for choice B
+becomes B>C + B>D + B>E, and after
+subtracting A>B, the column score for choice
+B becomes C>B + D>B + E>B.
+
+From among the remaining row scores the
+highest score is found.  At this point
+let's assume that both choice B and choice C
+have the same highest row score.
+
+In the case of a row-score tie, the
+choice with the smallest column score --
+from among the choices that have the same
+largest row score -- is ranked
+next.  This would be choice B.
+Therefore, choice B is moved to the sequence
+position just after choice A.  The
+resulting sequence is A, B, C, E, D.
+Below is the pairwise matrix for the new
+sequence.  The pairwise counts for the
+ranked choices are surrounded by asterisks.
+
+      |       |       |       |       |       |
+      |   A   |   B   |   C   |   E   |   D   |
+      |       |       |       |       |       |
+ -----*****************************************
+      * \     |       |       |       |       *
+  A   *   \   |  A>B  |  A>C  |  A>E  |  A>D  *
+      *     \ |       |       |       |       *
+ -----*-------+-------+-------+-------+-------*
+      *       | \     |       |       |       *
+  B   *  B>A  |   \   |  B>C  |  B>E  |  B>D  *
+      *       |     \ |       |       |       *
+ -----*-------+--------************************
+      *       |       * \     |       |       |
+  C   *  C>A  |  C>B  *   \   |  C>E  |  C>D  |
+      *       |       *     \ |       |       |
+ -----*-------+-------*-------+-------+-------+
+      *       |       *       | \     |       |
+  E   *  E>A  |  E>B  *  E>C  |   \   |  E>D  |
+      *       |       *       |     \ |       |
+ -----*-------+-------*-------+-------+-------+
+      *       |       *       |       | \     |
+  D   *  D>A  |  D>B  *  D>C  |  D>E  |   \   |
+      *       |       *       |       |     \ |
+ -----*****************-------+-------+-------+
+
+The same ranking process is repeated.
+The next choice to be ranked would be choice
+C.   It would have the highest row score
+-- and the smallest column score if there is a
+row-score tie.   So choice C would be
+identifed as the next choice in the ranked
+sequence.   After that, choice D would
+have the highest row score, and would be ranked
+next.  Finally the only remaining choice,
+choice E, would be ranked at the last (lowest)
+position.
+
+Here is the final pairwise matrix.
+
+      |       |       |       |       |       |
+      |   A   |   B   |   C   |   D   |   E   |
+      |       |       |       |       |       |
+ -----*****************************************
+      * \     |       |       |       |       *
+  A   *   \   |  A>B  |  A>C  |  A>D  |  A>E  *
+      *     \ |       |       |       |       *
+ -----*-------+-------+-------+-------+-------*
+      *       | \     |       |       |       *
+  B   *  B>A  |   \   |  B>C  |  B>D  |  B>E  *
+      *       |     \ |       |       |       *
+ -----*-------+-------+-------+-------+-------*
+      *       |       | \     |       |       *
+  C   *  C>A  |  C>B  |   \   |  C>D  |  C>E  *
+      *       |       |     \ |       |       *
+ -----*-------+-------+-------+-------+-------*
+      *       |       |       | \     |       *
+  D   *  D>A  |  D>B  |  D>C  |   \   |  D>E  *
+      *       |       |       |     \ |       *
+ -----*-------+-------+-------+-------+-------*
+      *       |       |       |       | \     *
+  E   *  E>A  |  E>B  |  E>C  |  E>D  |   \   *
+      *       |       |       |       |     \ *
+ -----*****************************************
+
+The choices are now fully ranked according
+to the Choice-Specific Pairwise-Count
+method.
+
+If only a single winner is needed, the
+first-ranked choice should not necessarily be
+selected as the winner.  Instead, the
+pairwise counts should be checked for a
+possible Condorcet winner, which may be second
+or third in the CSPS ranking result.
+
+Concise description of the calculation method:
 
 A row score and a column score
-is calculated for each choice.
-The row score is the sum of the pairwise counts
-in which the specified choice is preferred over
+is calculated for each choice.  The
+row score is the sum of the pairwise counts in
+which the specified choice is preferred over
 each of the other choices.  The column
 score is the sum of the pairwise counts in
-which the other choice is preferred over the
+which each other choice is preferred over the
 specified choice.
 
 For the choices that have not yet been
@@ -2994,221 +3208,6 @@ adjusting the remaining scores is
 repeated until only one choice remains,
 and it is ranked in the bottom (least-popular)
 position.
-
-Example:
-
-Consider an election (or survey) in which
-there are five choices: A, B, C, D, E, and the
-final ranking order is this alphabetical
-order.
-
-In this example the notation A>B
-refers to how many voters pairwise prefer
-choice A over choice B, and the notation
-B>A refers to how many voters pairwise
-prefer choice B over choice A.  This
-notation always uses the "greater-than" symbol
-">", and never uses the "less-than" symbol
-"<".
-
-At the beginning of this ranking example,
-suppose that the choices are arranged in the
-order C, E, A, D, B.  The pairwise counts
-for this arrangement are shown in this pairwise
-matrix.
-
-
-      |       |       |       |       |       |
-      |   C   |   E   |   A   |   D   |   B   |
-      |       |       |       |       |       |
- -----+-------+-------+-------+-------+-------+
-      | \     |       |       |       |       |
-  C   |   \   |  C>E  |  C>A  |  C>D  |  C>B  |
-      |     \ |       |       |       |       |
- -----+-------+-------+-------+-------+-------+
-      |       | \     |       |       |       |
-  E   |  E>C  |   \   |  E>A  |  E>D  |  E>B  |
-      |       |     \ |       |       |       |
- -----+-------+-------+-------+-------+-------+
-      |       |       | \     |       |       |
-  A   |  A>C  |  A>E  |   \   |  A>D  |  A>B  |
-      |       |       |     \ |       |       |
- -----+-------+-------+-------+-------+-------+
-      |       |       |       | \     |       |
-  D   |  D>C  |  D>E  |  D>A  |   \   |  D>B  |
-      |       |       |       |     \ |       |
- -----+-------+-------+-------+-------+-------+
-      |       |       |       |       | \     |
-  B   |  B>C  |  B>E  |  B>A  |  B>D  |   \   |
-      |       |       |       |       |     \ |
- -----+-------+-------+-------+-------+-------+
-
-
-The diagonal line passes through empty
-cells.  These cells are empty because they
-would represent a choice's comparison with
-itself, such as A>A.
-
-The goal of these calculations is to change
-the sequence so that the largest pairwise
-counts move into the upper-right triangular
-area, leaving the smallest pairwise counts in
-the lower-left triangular area.  (This is
-the goal of VoteFair popularity ranking.)
-
-The first step is to calculate
-choice-specific scores, with each choice having
-a row score and a column
-score.  For choice A, its row score
-equals the sum of the pairwise counts in the
-row labelled A, which equals A>B +
-A>C + A>D + A>E.  The column
-score for choice A is the sum of the
-pairwise counts in the column labeled A,
-which equals B>A + C>A + D>A +
-E>A.  The row scores and column scores
-for choices B, C, D, and E are calculated
-similarly.
-
-Next, all the row scores are compared to
-determine which choice has the largest row
-score.  In this example that score
-would be the row score for choice A (because it
-is first in alphabetical order).
-Therefore choice A is moved into first
-place.  The other choices remain in the
-same order.  The resulting sequence is A,
-C, E, D, B.  Here is the new arrangement
-for the new sequence.  The pairwise counts
-for the ranked choice (A) are surrounded by
-asterisks:
-
-
-      |       |       |       |       |       |
-      |   A   |   C   |   E   |   D   |   B   |
-      |       |       |       |       |       |
- -----*****************************************
-      * \     |       |       |       |       *
-  A   *   \   |  A>C  |  A>E  |  A>D  |  A>B  *
-      *     \ |       |       |       |       *
- -----*-------*********************************
-      *       * \     |       |       |       |
-  C   *  C>A  *   \   |  C>E  |  C>D  |  C>B  |
-      *       *     \ |       |       |       |
- -----*-------*-------+-------+-------+-------+
-      *       *       | \     |       |       |
-  E   *  E>A  *  E>C  |   \   |  E>D  |  E>B  |
-      *       *       |     \ |       |       |
- -----*-------*-------+-------+-------+-------+
-      *       *       |       | \     |       |
-  D   *  D>A  *  D>C  |  D>E  |   \   |  D>B  |
-      *       *       |       |     \ |       |
- -----*-------*-------+-------+-------+-------+
-      *       *       |       |       | \     |
-  B   *  B>A  *  B>C  |  B>E  |  B>D  |   \   |
-      *       *       |       |       |     \ |
- -----*********-------+-------+-------+-------+
-
-
-The row scores and column scores for the
-remaining (unranked) choices are adjusted to
-remove the pairwise counts that involve the
-just-ranked choice (A).  The removed
-pairwise counts are the ones surrounded by
-asterisks.  Specifically, after
-subtracting B>A, the row score for choice B
-becomes B>C + B>D + B>E, and after
-subtracting A>B, the column score for choice
-B becomes C>B + D>B + E>B.
-
-From among the remaining row scores the
-highest score is searched for.  At this
-point let's assume that both choice B and
-choice C have the same highest row score.
-
-In the case of a row-score tie, the
-choice with the smallest column score --
-from among the choices that have the same
-largest row score -- is ranked
-next.  This would be choice B.
-Therefore, choice B is moved to the sequence
-position just after choice A.  The
-resulting sequence is A, B, C, E, D.
-Below is the new arrangement for the new
-sequence.  The pairwise counts for the
-ranked choices are surrounded by asterisks:
-
-
-      |       |       |       |       |       |
-      |   A   |   B   |   C   |   E   |   D   |
-      |       |       |       |       |       |
- -----*****************************************
-      * \     |       |       |       |       *
-  A   *   \   |  A>B  |  A>C  |  A>E  |  A>D  *
-      *     \ |       |       |       |       *
- -----*-------+-------+-------+-------+-------*
-      *       | \     |       |       |       *
-  B   *  B>A  |   \   |  B>C  |  B>E  |  B>D  *
-      *       |     \ |       |       |       *
- -----*-------+--------************************
-      *       |       * \     |       |       |
-  C   *  C>A  |  C>B  *   \   |  C>E  |  C>D  |
-      *       |       *     \ |       |       |
- -----*-------+-------*-------+-------+-------+
-      *       |       *       | \     |       |
-  E   *  E>A  |  E>B  *  E>C  |   \   |  E>D  |
-      *       |       *       |     \ |       |
- -----*-------+-------*-------+-------+-------+
-      *       |       *       |       | \     |
-  D   *  D>A  |  D>B  *  D>C  |  D>E  |   \   |
-      *       |       *       |       |     \ |
- -----*****************-------+-------+-------+
-
-
-The same ranking process is repeated.
-The next choice to be ranked would be choice
-C.  It would have the highest row score
--- and the smallest column score if there
-is a row-score tie.  So choice C would be
-identifed as the next choice in the ranked
-sequence.  After that, choice D would have the
-highest row score, and would be ranked next.
-Finally the only remaining choice, choice E,
-would be ranked at the last (lowest) position.
-
-Here is the final ranked arrangement:
-
-
-      |       |       |       |       |       |
-      |   A   |   B   |   C   |   D   |   E   |
-      |       |       |       |       |       |
- -----*****************************************
-      * \     |       |       |       |       *
-  A   *   \   |  A>B  |  A>C  |  A>D  |  A>E  *
-      *     \ |       |       |       |       *
- -----*-------+-------+-------+-------+-------*
-      *       | \     |       |       |       *
-  B   *  B>A  |   \   |  B>C  |  B>D  |  B>E  *
-      *       |     \ |       |       |       *
- -----*-------+-------+-------+-------+-------*
-      *       |       | \     |       |       *
-  C   *  C>A  |  C>B  |   \   |  C>D  |  C>E  *
-      *       |       |     \ |       |       *
- -----*-------+-------+-------+-------+-------*
-      *       |       |       | \     |       *
-  D   *  D>A  |  D>B  |  D>C  |   \   |  D>E  *
-      *       |       |       |     \ |       *
- -----*-------+-------+-------+-------+-------*
-      *       |       |       |       | \     *
-  E   *  E>A  |  E>B  |  E>C  |  E>D  |   \   *
-      *       |       |       |       |     \ *
- -----*****************************************
-
-
-The choices are now fully ranked.  If
-only a single winner is needed, the
-first-ranked choice would be selected as the
-winner.
 
 (This description of the VoteFair choice-specific
 pairwise-score method was copied from
@@ -3866,61 +3865,75 @@ sub calc_votefair_choice_specific_pairwise_score_popularity_rank
 Calculates VoteFair popularity ranking results
 using the "insertion-sort" sorting algorithm.
 
-When the well-known insertion-sort algorithm
-is applied to VoteFair popularity ranking
--- which is mathematically equivalent to
-the Condorcet-Kemeny method -- and the sequence
-is pre-sorted using the VoteFair
-choice-specific score-based ranking, the result
-is extremely fast execution times compared to
-the "NP-hard" approach of calculating every
-sequence score in order to find the sequence
-with the highest score.
+VoteFair popularity ranking is described in
+Wikipedia, and is mathematically equivalent
+to the Condorcet-Kemeny method.  The
+following comments explain the algorithm used
+here, which quickly calculates the ranking
+results.  This explanation is important
+because some academic sources claim that
+the computations cannot be done quickly if
+there is a large number of choices being
+ranked.
 
-Specifically the calculation time for
-this insertion-sort calculation method --
-including the VoteFair choice-specific
-score-based (pre-sort) calculations -- can be
-expressed as the following polynomial
-function:
+Although the goal of VoteFair popularity
+ranking is to find the sequence that has the
+highest sequence score, the scores themselves
+do not need to be calculated.  This
+concept is similar to not needing to know the
+elevation of every point in a region in order
+to know that a specific mountain peak  is the
+highest elevation in that region.  By not
+calculating all the sequence scores, the
+calculation time can be greatly reduced
+compared to the method that calculates all the
+sequence scores.
 
- T = ( A * N ) + ( B * ( N * N ) )
+The algorithm described here assumes that
+the choices already have been pre-sorted using
+the Choice-Specific Pairwise-Score (CSPS)
+algorithm.  That algorithm is part of this
+full calculation algorithm.
 
-where T is the calculation time, N is the
-number of choices, and A and B are constants.
-(In mathematical notation, N * N would be
-written as N squared.)
+The full algorithm repeatedly uses a
+variation of the "insertion-sort" sorting
+algorithm, so that algorithm is described
+first.
 
-An academically common -- yet mistaken --
-belief is that calculating the
-"Condorcet-Kemeny method" is "NP-hard" and
-cannot be calculated in a time that is
-proportional to a polynomial function of N (the
-number of choices).
+Insertion-sort algorithm applied to finding
+maximum sequence score:
 
-Therefore, a description of this calculation
-method is presented here:
+This explanation clarifies how the
+well-known insertion-sort algorithm is applied
+to VoteFair popularity ranking in a way that
+greatly reduces the number of calculations
+needed to find maximum sequence scores. 
+(This  method is just part of the full
+algorithm, which is explained in the next
+section.)
 
 Consider an example in which there are five
-choices: A, B, C, D, E, and the final sort
-order is this alphabetical order.
+choices named A, B, C, D, and E, with a final
+sort order that matches this alphabetical
+order.
 
-Notation: The notation A>B refers to how many
-voters pairwise prefer choice A over choice B,
-and the notation B>A refers to how many voters
-pairwise prefer choice B over choice A.  This
-notation always uses the "greater-than" symbol
-">", and never uses the "less-than" symbol "<".
+Notation: The notation A>B refers to how
+many voters pairwise prefer choice A over
+choice B, and the notation B>A refers to how
+many voters pairwise prefer choice B over
+choice A.  This notation always uses the
+"greater-than" symbol ">", and never uses
+the "less-than" symbol "<".
 
 At an intermediate stage in this sorting
 example, suppose that the choices A, C, and E
-have been sorted -- into this correct order --
-and choice B is about to be sorted, and choice
-D remains unsorted.  The pairwise counts for
-this arrangement is shown below, in which the
-asterisks show the separation between sorted
-choices and unsorted choices.
-
+have been sorted -- into this correct
+order -- and choice B is about to be
+sorted, and choice D remains unsorted. 
+The pairwise counts for this arrangement are
+shown below.  The asterisks show the
+separation between sorted choices and unsorted
+choices.
 
       |       |       |       |       |       |
       |   A   |   C   |   E   |   B   |   D   |
@@ -3947,34 +3960,35 @@ choices and unsorted choices.
       |       |       |       |       |     \ |
  -----+-------+-------+-------+-------+-------+
 
-
-The diagonal line passes through empty cells --
-that would otherwise represent a choice's
-comparison with itself, such as A>A.
+The diagonal line passes through empty cells
+-- that would otherwise represent a
+choice's comparison with itself, such as
+A>A.
 
 The diagonal line also is the border between
 the upper-right triangular area and the
 lower-left triangular area.  The sequence
 score for the current sequence is the sum of
 all the pairwise counts in the upper-right
-triangular area (currently
-A>C + A>E + A>B + A>D + C>E + C>B + C>D + E>B + E>D + B>D).
+triangular area (currently A>C + A>E +
+A>B + A>D + C>E + C>B + C>D +
+E>B + E>D + B>D).
 
-The goal of these calculations is to find the
-maximum sequence score, which means the goal
-is to change the sequence so that the largest
-pairwise counts move into the upper-right
-triangular area, leaving the smallest pairwise
-counts in the lower-left triangular area.
+The goal of these calculations is to find
+the maximum sequence score, which means the
+goal is to change the sequence so that the
+largest pairwise counts move into the
+upper-right triangular area, leaving the
+smallest pairwise counts in the lower-left
+triangular area.
 
 The first step in sorting choice B is to
 consider the possibility of moving it to the
-left of choice E, which would form the
-sequence A, C, B, E.  Here is the
-pairwise-count matrix for this sequence (with
-the asterisks now including choice B because
-this is a possible sort order).
-
+left of choice E, which would form the sequence
+A, C, B, E.  Here is the pairwise-count
+matrix for this sequence.  The asterisks
+now include choice B because this is a possible
+sort order.
 
       |       |       |       |       |       |
       |   A   |   C   |   B   |   E   |   D   |
@@ -4001,29 +4015,28 @@ this is a possible sort order).
       |       |       |       |       |     \ |
  -----+-------+-------+-------+-------+-------+
 
-
 The only pairwise counts that crossed the
-diagonal line are the (underlined) counts B>E
-and E>B, which swapped places.  All the
-other pairwise counts that move do not cross
-the diagonal line; they stay on the same
+diagonal line are the (underlined) counts
+B>E and E>B, which swapped places. 
+All the other pairwise counts that move do not
+cross the diagonal line; they stay on the same
 side of the diagonal line.
 
 As a result, the score for this sequence,
-compared to the score for the previous sequence,
-increases (or decreases if negative) by the
-amount B>E minus E>B.  In this case (assuming
-there are no complications that are explained
-later) the sequence score has increased
-because in the final (alphabetical) sort
-order, choice B appears before choice E.
+compared to the score for the previous
+sequence, increases (or decreases if negative)
+by the amount B>E minus E>B.  In
+this case (assuming there are no complications
+that are explained later) the sequence score
+has increased because in the final
+(alphabetical) sort order, choice B appears
+before choice E.
 
 The next step in sorting choice B is to
 consider the possibility of moving it to the
-left of choice C, which would form the
-sequence A, B, C, E.  Here is the
-pairwise-count matrix for this sequence.
-
+left of choice C, which would form the sequence
+A, B, C, E.  Here is the pairwise-count
+matrix for this sequence.
 
       |       |       |       |       |       |
       |   A   |   B   |   C   |   E   |   D   |
@@ -4050,25 +4063,24 @@ pairwise-count matrix for this sequence.
       |       |       |       |       |     \ |
  -----+-------+-------+-------+-------+-------+
 
-
 The only pairwise counts that crossed the
-diagonal line are the (underlined) counts B>C
-and C>B, which swapped places.  The other
-pairwise counts that moved remained on the same
-side of the diagonal line.
+diagonal line are the (underlined) counts
+B>C and C>B, which swapped places. 
+The other pairwise counts that moved remained
+on the same side of the diagonal line.
 
 The score for this sequence increases (or
 decreases if negative) by the amount B>C
-minus C>B.  In this case the sequence score has
-increased because (in the final alphabetical
-order) choice B appears before choice C.
+minus C>B.  In this case the sequence
+score has increased because (in the final
+alphabetical order) choice B appears before
+choice C.
 
 The final step in sorting choice B is to
 consider the possibility of moving it to the
-left of choice A, which would form the
-sequence B, A, C, E.  Here is the matrix for
-this sequence.
-
+left of choice A, which would form the sequence
+B, A, C, E.  Here is the matrix for this
+sequence.
 
       |       |       |       |       |       |
       |   B   |   A   |   C   |   E   |   D   |
@@ -4095,36 +4107,39 @@ this sequence.
       |       |       |       |       |     \ |
  -----+-------+-------+-------+-------+-------+
 
-
 The only pairwise counts that crossed the
-diagonal line are the (underlined) counts B>A
-and A>B, which swapped places.  The other
-pairwise counts that moved remained on the same
-side of the diagonal line.
+diagonal line are the (underlined) counts
+B>A and A>B, which swapped places. 
+The other pairwise counts that moved remained
+on the same side of the diagonal line.
 
 The score for this sequence increases (or
 decreases if negative) by the amount B>A
-minus A>B.  In this case the sequence score has
-decreased because (in the final alphabetical
-order) choice B appears after, not before,
-choice A.
+minus A>B.  In this case the sequence
+score has decreased because (in the final
+alphabetical order) choice B appears after, not
+before, choice A.
 
-The maximum sequence score for the tested
-positions of choice B occurred when it was
-between choices A and C.
+At this point choice B has been tested at
+each position within the sorted portion. 
+The  maximum sequence score (for the sorted
+portion) occurred when it was between choices A
+and C.  As a result, choice B will be
+moved to the position between choices A and
+C.
 
 Notice that the full sequence score did not
 need to be calculated in order to find this
-"local" maximum.  These calculations only need
-to keep track of increases and decreases that
-occur as the being-sorted choice swaps places
-with successive already-sorted choices.
+"local" maximum.  These calculations only
+need to keep track of increases and decreases
+that occur as the being-sorted choice swaps
+places with successive already-sorted
+choices.
 
-Based on the above results, choice B is moved
-into the second sort-order position (between A
-and C) as shown below.  Now choice D is the
+The pairwise-count matrix with choice B in
+the second sort-order position (between A and
+C) is shown below.  Now choice D is the
 only unsorted choice.
-
 
       |       |       |       |       |       |
       |   A   |   B   |   C   |   E   |   D   |
@@ -4151,12 +4166,10 @@ only unsorted choice.
       |       |       |       |       |     \ |
  -----+-------+-------+-------+-------+-------+
 
-
-Choice D would be sorted in the same way.  Of
-course the maximum sequence score would occur
-when choice D is between choices C and E, so D
-is moved there.
-
+Choice D would be sorted in the same
+way.  Of course the maximum sequence score
+would occur when choice D is between choices C
+and E, so D is moved there.
 
       |       |       |       |       |       |
       |   A   |   B   |   C   |   D   |   E   |
@@ -4183,53 +4196,89 @@ is moved there.
       *       |       |       |       |     \ *
  -----*****************************************
 
-Now there are no more choices to sort, so the
-resulting sequence is A, B, C, D, E.  In this
-sequence the full sequence score -- which equals
-A>B + A>C + A>D + A>E + B>C + B>D + B>E +
-C>D + C>E + D>E -- is the highest possible
-sequence score.
+Now there are no more choices to sort, so
+the resulting sequence is A, B, C, D, E. 
+In this sequence the full sequence score
+-- which equals A>B + A>C + A>D +
+A>E + B>C + B>D + B>E + C>D +
+C>E + D>E -- is likely to be the
+highest possible sequence score.
 
-To ensure that all possible moves of each choice
-are considered, sorting is done in both
-directions.  This means that in some sorting
-passes sorting moves choices to the left, as
-explained in the above example.  In other
-sorting passes sorting starts by considering
-the right-most choice as the first sorted
-choice, and choices move to the right, into
-the sorted portion.  This convention ensures
-movement for choices that need to move right,
-instead of left, to cause an increase in the
-score.
+Additional calculations, as described below,
+are needed because in rare cases it is possible
+that moving two or more choices at the same
+time could produce a higher sequence
+score.  This concept is analogous to
+climbing a mountain in foggy conditions by
+always heading in the locally higher direction
+and ending up at the top of a peak and then,
+when the fog clears, seeing a higher peak.
 
-Complications arise when there is "circular
-ambiguity" which most commonly occurs when
-several choices are tied for the same
-sort-order position.
+Full calculation method for VoteFair popularity ranking:
 
-A key part of dealing with circular ambiguity
-is to follow this convention: whenever a
-choice produces the same, highest, sequence
-score at more than one position, the choice is
-moved to the farthest of those
-highest-sequence-score positions.
+This is a description of the full algorithm
+used to calculate VoteFair popularity ranking
+results.
+
+The algorithm begins by calculating the
+Choice-Specific Pairwise-Score ranking. 
+This pre-sort is a required part of the
+process.  Without it, some unusual cases
+can cause the calculations to fail to find the
+sequence with the highest score.  This
+pre-sort is analogous to starting a search for
+the highest mountain peak within a mountain
+range instead of starting the search within a
+large valley.
+
+The next step is to apply the insertion-sort
+method as described in the section above,
+including starting at the left/highest end.
+
+To ensure that all possible moves of each
+choice are considered, the insertion-sort
+method is done in both directions. 
+Sorting in both directions means that in some
+sorting passes sorting moves choices to the
+left, as explained in the above example. 
+In other sorting passes sorting starts by
+considering the right-most choice as the first
+sorted choice, and choices move to the right,
+into the sorted portion.  This convention
+ensures movement for choices that need to move
+right, instead of left, in order to cause an
+increase in the score.
+
+Complications can arise when there is
+"circular ambiguity", so additional steps are
+used.  The most common cases of circular
+ambiguity involve several choices that are tied
+for the same sort-order position.
+
+A key part of dealing with circular
+ambiguity is to follow this convention:
+whenever a choice can produce the same,
+highest, sequence score at more than one
+position, the choice is moved to the farthest
+of those highest-sequence-score positions.
 
 Another part of dealing with these
 complications is to sort the sequence multiple
-times.  During the second sorting pass, if
-there is no circular ambiguity, the sequence
-of the choices in the pairwise matrix remains
-the same.  This lack of movement (when
-there is no circular ambiguity) occurs
-because each choice to be sorted is already
-at the top (for left-movement sorting) or
-bottom (for right-movement sorting) of the
-"unsorted" portion, and it is being moved to
-the bottom (for left-movement sorting) or
-top (for right-movement sorting) of the
-"sorted" portion.  The sorted and unsorted
-portions are adjacent, so in such cases
+times.
+
+During the second sorting pass, if there is
+no circular ambiguity, the sequence of the
+choices in the pairwise matrix remains the
+same.  This lack of movement (when there
+is no circular ambiguity) occurs because the
+sorted and unsorted portions are
+adjacent.  Specifically, each choice to be
+sorted is already at the top (for left-movement
+sorting) or bottom (for right-movement sorting)
+of the "unsorted" portion, and it is being
+moved to the bottom (for left-movement sorting)
+or top (for right-movement sorting) of
+the "sorted" portion.  In such cases
 the only thing that moves is the boundary
 between the sorted choices and unsorted
 choices.
@@ -4237,35 +4286,34 @@ choices.
 However, in cases that involve circular
 ambiguity, the positions of some choices will
 change during the second and later sorting
-passes.  This happens because the convention
-(as explained above) is to move each choice
-as far as it will go, within the limits of
-maximizing the sequence score.
+passes.  This happens because the
+convention (as explained above) is to move each
+choice as far as it will go, within the limits
+of maximizing the sequence score.
 
 During the sorting passes the highest
 sort-order (sequence) position of each choice
-is tracked, and the lowest sort-order
-position of each choice is tracked.  These
-highest and lowest positions are reset (to
-current positions) whenever the sequence score
-increases to a higher score.  At the end of
-the sorting process the highest and lowest
-positions reveal which choices are tied at
-the same popularity ranking level.
+is tracked, and the lowest sort-order position
+of each choice is tracked.  These highest
+and lowest positions are reset (to current
+positions) whenever the sequence score
+increases to a higher score.  At the end
+of the sorting process the highest and lowest
+positions reveal which choices are tied at the
+same popularity ranking level.
 
-Using the above example, if the choices
+Using the insertion-sort example, if choices
 B, C, and D can be in any order and still
-produce the same highest sequence score,
-each of these choices would move to the left
-of the other two each time it is sorted,
-and each of these choices would have the
-same highest-ranked position of
-second place, and each would have the same
-lowest-ranked position of fourth place.
-Because these three choices have the same
-highest and lowest positions, they are easily
-identified as tied (at the same popularity
-ranking).
+produce the same highest sequence score, then
+each of these choices would move to the left of
+the other two each time it is sorted, and each
+of these choices would have the same
+highest-ranked position of second place, and
+each would have the same lowest-ranked position
+of fourth place. Because these three choices
+have the same highest and lowest positions,
+they are easily identified as tied (at the same
+popularity ranking).
 
 More complex cases of circular ambiguity can
 occur.  To deal with these cases, and to
@@ -4273,50 +4321,103 @@ ensure the correctness of the "winner" (the
 most popular choice), the sorting process is
 repeated for the top half (plus one) of the
 highest-ranked choices, and this sub-set
-sorting is repeated until there are just
-three choices.
-For example, if there are 12 choices, the
-sorting process is done for 12 choices, then
-the top 7 choices, then the top 4 choices,
-and finally the top 3 choices.  Then the
-highest-ranked choice is kept at the highest
-rank while the other choices are sorted a
-final time.
+sorting is repeated until there are just three
+choices.  For example, if there are 12
+choices, the sorting process is done for 12
+choices, then the top 7 choices, then the top 4
+choices, and finally the top 3 choices. 
+Then the highest-ranked choice (or the choices
+that are tied at the top) is kept at the
+highest rank while the other choices are sorted
+a final time.  (If, instead, the
+least-popular choice is the most important one
+to identify correctly, the data supplied to
+this algorithm can be inverted according to
+preference levels, and then the calculated
+ranking can be reversed.)
 
-As a clarification, the extra sub-set sorting
-is only done if more than one sequence has
-the same highest sequence score.  This point
-is significant if the distinction between
+As a clarification, the extra sub-set
+sorting is done only if more than one sequence
+has the same highest sequence score.  This
+point is significant if the distinction between
 VoteFair popularity ranking and the
-Condorcet-Kemeny method is relevant.
-Specifically, the Condorcet-Kemeny method
-does not indicate how such "tied" sequence
-scores should be resolved, whereas VoteFair
-popularity ranking resolves such "tied"
-sequence scores as part of its calculation
-process.
+Condorcet-Kemeny method is relevant. 
+Specifically, the Condorcet-Kemeny method does
+not indicate how such "tied" sequence scores
+should be resolved, whereas VoteFair popularity
+ranking resolves such "tied" sequence scores as
+part of its calculation process.
 
-After all the sorting has been done, and
-the highest and lowest ranking levels
-have been determined, the highest and
-lowest ranking level for each choice
-are added together (which equals twice
-their average) and then multiplied times
-a constant, namely 10 times the number of
-choices.  These results are converted to an
-integer value, and then these
-"averaged scaled integerized" are used as
-the non-normalized ranking levels.
-Two or more choices are ranked at the
-same level if they have the same
+After all the sorting has been done, the
+highest and lowest ranking levels are used to
+determine the results.  For each choice
+its highest and lowest ranking levels
+are added together (which equals twice their
+average) and then multiplied times a
+constant.  The constant equals 10 times
+the number of choices minus one.  These
+numbers are converted to integers, and then
+these "averaged scaled integerized" values are
+used as the non-normalized ranking
+levels.  Two or more choices are ranked at
+the same level if they have the same
 "averaged-scaled-integerized" ranking
 values.
 
 The final calculation step is to normalize
 the "averaged-scaled-integerized" ranking
-levels so that the normalized ranking
-levels are consecutive, namely 1, 2, 3, etc.
-(so that no ranking levels are skipped).
+levels so that the normalized ranking levels
+are consecutive, namely 1, 2, 3, etc. (so that
+no ranking levels are skipped).
+
+The result is a ranking that identifies
+which choice is first-most popular, which
+choice is second-most popular, and so on down
+to which choice is least popular.  Ties
+can occur at any level.
+
+Calculation time:
+
+The full algorithm used to calculate
+VoteFair popularity ranking results  has a
+calculation time that is less than or equal to
+the following polynomial function:
+
+  T = A + ( B * N ) + ( C * ( N * N ) )
+
+where T is the calculation time, N is the
+number of choices, and A and B and C are
+constants.  (In mathematical notation, N *
+N would be written as N squared.)  This
+function includes the calculation time required
+for the Choice-Specific Pairwise-Score (CSPS)
+pre-sort calculations.
+
+This time contrasts with the slow execution
+times  of the "NP-hard" approach, in which
+every sequence score is calculated in order to
+find the sequence with the highest score. 
+If every sequence score were calculated (from
+scratch), the calculation time would be
+proportional to:
+
+  N! * N * N
+
+where N is the number of choices, N! is N
+factorial (2 * 3 * 4 * ... * N), and N * N
+equals N squared.  Note that N factorial
+equals the number of possible sequences, and N
+squared times one-half approximately equals the
+number of pairwise counts that are added to
+calculate each sequence score.
+
+This clarification about calculation time is
+included because there is an academically
+common -- yet mistaken -- belief that
+calculating the "Condorcet-Kemeny method" is
+"NP-hard" and cannot be calculated in a time
+that is proportional to a polynomial function
+of N (the number of choices).
 
 (c) Copyright 2011 Richard Fobes at VoteFair.org
 
@@ -5465,7 +5566,7 @@ sub calc_votefair_insertion_sort_popularity_rank
 #  ranking levels.
 #  For each choice, multiply the sum of
 #  the highest and lowest ranking level by
-#  a constant (10 times the number of choices)
+#  a constant (10 times the number of choices minus one)
 #  and convert the result to an integer.
 #  Use these "averaged scaled integerized"
 #  ranking levels to calculate normalized
@@ -5475,7 +5576,7 @@ sub calc_votefair_insertion_sort_popularity_rank
 #  averaged-scaled-integerized values.
 
     if ( $true_or_false_log_details == $global_true ) { print LOGOUT "[insertion sort, calculating averaged-scaled-integerized levels]\n" } ;
-    $scale_value = 10 * $global_adjusted_choice_count ;
+    $scale_value = 10 * ( $global_adjusted_choice_count - 1 ) ;
     for ( $adjusted_choice = 1 ; $adjusted_choice <= $global_adjusted_choice_count ; $adjusted_choice ++ )
     {
         $actual_choice = $global_actual_choice_for_adjusted_choice[ $adjusted_choice ] ;
