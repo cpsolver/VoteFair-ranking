@@ -1,0 +1,146 @@
+VoteFair-ranking
+
+This module calculates VoteFair ranking results.  VoteFair ranking consists of:
+
+* VoteFair popularity ranking.  This voting method calculates the full popularity ranking of all candidates (or choices in the case of a survey or poll) from most popular and second-most popular down to least popular.  It uses the preference information collected on 1-2-3 ballots (or any equivalent way of expressing "ranked" preferences).  When a single position is being filled, the most popular candidate is declared the winner.  This calculation method is mathematically equivalent to the Condorcet-Kemeny election method.
+
+* VoteFair representation ranking.  This voting method is used to elect a second candidate from the same district, or to fill multiple board-of-director positions, or to choose a second simultaneous activity in addition to the most popular activity.  This method reduces the influence of the voters who are already well-represented by the most popular candidate (or choice).  Without this adjustment the same voters who prefer the first winner also can determine the second winner, and this can leave large numbers of other voters unrepresented.
+
+* VoteFair party ranking.  This voting method ranks political parties according to a different kind of "popularity".  It can be used in high-stakes elections that otherwise attract too many candidates.  In such elections the two or three most popular political parties can be limited to offering just two candidates from each party, and other parties that are somewhat popular can be allowed to offer one candidate each.  Such limits have not been needed in the past because the fear of vote splitting has limited political parties to offering only one candidate in each contest.
+
+For detailed descriptions of VoteFair Ranking, see www.VoteFair.org or the book "Ending The Hidden Unfairness In U.S. Elections" by Richard Fobes.
+
+In addition to being useful for elections, VoteFair Ranking also is useful for calculating results for surveys and polls, ranking the popularity of songs and movies, and much more.
+
+Version 5.00
+
+
+
+WINDOWS OS: INSTALLING STRAWBERRY PERL
+
+The Windows operating system (unlike Linux and Mac OS X) does not include support for the Perl language,
+which is needed for this module.  The easiest way to support Perl on Windows is to install Strawberry Perl
+from: www.strawberryperl.com (and accept the default installation location).  After installing Strawberry
+Perl, go to the Start Menu and (in Windows 7) type "perl" and click on the "Perl (command line)" link.  
+That action will put you into a command-line environment where you can type the commands (followed by 
+pressing the Enter key) that are described below.  To exit this environment, either type the "exit" 
+command or close the window.
+
+
+
+WINDOWS OS: DOWNLOADING ONLY THE PERL INTERPRETER/COMPILER
+
+If you do not want to use the Perl CPAN environment, you can use the GitHub version of the VoteFair-ranking
+module.  This approach requires the files listed below (or their current equivalent), which can be found
+within the Strawberry Perl download.
+
+    perl.exe
+
+    perl512.dll
+
+    libgcc_s_sjlj-1.dll
+
+However, those Perl files are not easy to find for non-experts, and their copyright license does not allow
+making them available separately, so instructions for using this minimalistic approach (which is portable 
+across Windows PCs) is not explained here.  (This is the environment in which the GitHub version of VoteFair
+ranking was developed.)
+
+
+
+INSTALLATION INSTRUCTIONS
+
+From a command line (on Linux/Unix or Mac OS X or using Strawberry Perl on Windows), execute the following
+commands.  These commands download (through your internet connection) and install the CPAN installer 
+("cpanm") and the Voting::VoteFairRanking and Language::Dashrep modules from the CPAN archives (which are
+mirrored on servers in hundreds of locations throughout the world):
+
+    cpan App::cpanminus
+
+    cpanm Voting::VoteFairRanking
+
+    cpanm Language::Dashrep
+
+After successfully executing these commands, download from the CPSolver account at GitHub the Dashrep-language
+definitions in the Vote-Info-Split-Join project, and put them into a new folder/directory.  If you are using a
+Windows PC and need specific instructions, here they are:  In your web browser go to www.GitHub.com and search
+for "visj" and click on the link to "cpsolver / Vote-Info-Split-Join-VISJ".  Then click the "Downloads" tab, and
+then click the "Download as zip" button, and choose to save the file.  Next, using Windows explorer (not IE), 
+navigate to wherever you saved the file (usually the "Downloads" folder) and double-click that file, and then 
+double-click the (only) folder you now see, and then select all the files (using Ctrl-A), and copy them 
+(using Ctrl-C), and navigate to a new folder (named something like VoteFairRankingArea), and paste the copied
+files (using Ctrl-V).
+
+
+
+RUNNING THE VOTE-INFO-SPLIT-JOIN DEMO
+
+In your Perl-aware command-line interface (Strawberry Perl for Windows OS, or any Linux or Mac OS X command-line
+"terminal"), use the "cd" (change-directory) command to navigate to the folder/directory into which you put the 
+VISJ files.  (Hints: Use the Tab key for automatic completion of folder names, and use the "ls" command 
+(or "dir" in Strawberry Perl) to find out where you are.)
+
+Then enter the following commands:
+
+    perl votefair_ranking_do.pl < input_empty_file.txt > output_empty_results.txt
+
+    perl dashrep_do_translation.pl < votefair_visj_split.txt > output_split_messages.txt
+
+    perl votefair_ranking_do.pl < output_visj_step_05_data_numeric_only.txt > output_from_vote_calc_sw_visj_results.txt
+
+    perl dashrep_do_translation.pl < votefair_visj_join.txt > output_join_messages.txt
+
+The final results are placed into the following file, which should be viewed using your browser:
+
+    output_visj_step_10_final_results.html
+
+If you run into problems, execute the following command to verify that the Voting::VoteFairRanking code is
+executing correctly:
+
+    perl votefair_ranking_sample.pl > output_sample.txt
+
+The output of the "votefair_ranking_sample.pl" software are the following files:
+
+    output_sample.txt  (criptic calculated results)
+
+    output_votefair_debug_info.txt  (step-by-step calculation details)
+
+
+
+VOTE-INFO-SPLIT-JOIN FRAMEWORK FOR ELECTION USAGE
+
+After you have successfully executed the supplied VISJ demo, you can adapt the VISJ files to handle your
+election data if it is in XML (which includes EML).  This calculation method is slow, but it uses the 
+Dashrep programming language which may be easier to understand compared to understanding a programming 
+language such as Perl.
+
+In this framework the VoteFair-ranking software does not have access to the names of candidates or political
+parties; this approach provides further proof that the calculations are not biased.
+
+The following files are the ones that are most likely to need modification to adapt the input and output
+to your needs:
+
+    vote_info_dashrep_definitions_prefilter.txt  (adapts to different input-data XML tags)
+
+    vote_info_dashrep_definitions_text_after_calc.txt  (affects layout of results)
+
+    votefair_specific_visj_text_after_calc.txt  (affects layout of results)
+
+    votefair_specific_visj_language_en.txt  (determines the output language, which is currently English)
+
+
+
+DOCUMENTATION AND SUPPORT
+
+Please report bugs and request features at the CPSolver account on GitHub.
+
+If you encounter bugs using the CPAN version, please report them using the normal CPAN bug-tracking system.
+
+Documentation about this module is available at http://search.cpan.org/dist/Voting::VoteFairRanking
+
+
+
+COPYRIGHT AND LICENSE
+
+(c) Copyright 1991 through 2011 Richard Fobes at www.VoteFair.org.  You can redistribute and/or modify this VoteFair-ranking library module under the Perl Artistic license version 2.0 (a copy of which is included with this module file).  The mathematical algorithms of VoteFair ranking are in the public domain.
+
+Conversion of this code into another programming language is also covered by the above license terms.
