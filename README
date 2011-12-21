@@ -40,7 +40,7 @@ within the Strawberry Perl download.
 
     libgcc_s_sjlj-1.dll
 
-However, those Perl files are not easy to find for non-experts, and their copyright license does not allow
+However, these Perl files are not easy to find for non-experts, and their copyright license does not allow
 making them available separately, so instructions for using this minimalistic approach (which is portable 
 across Windows PCs) is not explained here.  (This is the environment in which the GitHub version of VoteFair
 ranking was developed.)
