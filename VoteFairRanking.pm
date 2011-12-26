@@ -3907,7 +3907,7 @@ This explanation clarifies how the
 well-known insertion-sort algorithm is applied
 to VoteFair popularity ranking in a way that
 greatly reduces the number of calculations
-needed to find maximum sequence scores. 
+needed to find maximum sequence scores.
 (This  method is just part of the full
 algorithm, which is explained in the next
 section.)
@@ -3929,7 +3929,7 @@ At an intermediate stage in this sorting
 example, suppose that the choices A, C, and E
 have been sorted -- into this correct
 order -- and choice B is about to be
-sorted, and choice D remains unsorted. 
+sorted, and choice D remains unsorted.
 The pairwise counts for this arrangement are
 shown below.  The asterisks show the
 separation between sorted choices and unsorted
@@ -4017,7 +4017,7 @@ sort order.
 
 The only pairwise counts that crossed the
 diagonal line are the (underlined) counts
-B>E and E>B, which swapped places. 
+B>E and E>B, which swapped places.
 All the other pairwise counts that move do not
 cross the diagonal line; they stay on the same
 side of the diagonal line.
@@ -4065,7 +4065,7 @@ matrix for this sequence.
 
 The only pairwise counts that crossed the
 diagonal line are the (underlined) counts
-B>C and C>B, which swapped places. 
+B>C and C>B, which swapped places.
 The other pairwise counts that moved remained
 on the same side of the diagonal line.
 
@@ -4109,7 +4109,7 @@ sequence.
 
 The only pairwise counts that crossed the
 diagonal line are the (underlined) counts
-B>A and A>B, which swapped places. 
+B>A and A>B, which swapped places.
 The other pairwise counts that moved remained
 on the same side of the diagonal line.
 
@@ -4121,7 +4121,7 @@ alphabetical order) choice B appears after, not
 before, choice A.
 
 At this point choice B has been tested at
-each position within the sorted portion. 
+each position within the sorted portion.
 The  maximum sequence score (for the sorted
 portion) occurred when it was between choices A
 and C.  As a result, choice B will be
@@ -4197,7 +4197,7 @@ and E, so D is moved there.
  -----*****************************************
 
 Now there are no more choices to sort, so
-the resulting sequence is A, B, C, D, E. 
+the resulting sequence is A, B, C, D, E.
 In this sequence the full sequence score
 -- which equals A>B + A>C + A>D +
 A>E + B>C + B>D + B>E + C>D +
@@ -4221,7 +4221,7 @@ used to calculate VoteFair popularity ranking
 results.
 
 The algorithm begins by calculating the
-Choice-Specific Pairwise-Score ranking. 
+Choice-Specific Pairwise-Score ranking.
 This pre-sort is a required part of the
 process.  Without it, some unusual cases
 can cause the calculations to fail to find the
@@ -4237,10 +4237,10 @@ including starting at the left/highest end.
 
 To ensure that all possible moves of each
 choice are considered, the insertion-sort
-method is done in both directions. 
+method is done in both directions.
 Sorting in both directions means that in some
 sorting passes sorting moves choices to the
-left, as explained in the above example. 
+left, as explained in the above example.
 In other sorting passes sorting starts by
 considering the right-most choice as the first
 sorted choice, and choices move to the right,
@@ -4325,7 +4325,7 @@ sorting is repeated until there are just three
 choices.  For example, if there are 12
 choices, the sorting process is done for 12
 choices, then the top 7 choices, then the top 4
-choices, and finally the top 3 choices. 
+choices, and finally the top 3 choices.
 Then the highest-ranked choice (or the choices
 that are tied at the top) is kept at the
 highest rank while the other choices are sorted
@@ -4341,7 +4341,7 @@ sorting is done only if more than one sequence
 has the same highest sequence score.  This
 point is significant if the distinction between
 VoteFair popularity ranking and the
-Condorcet-Kemeny method is relevant. 
+Condorcet-Kemeny method is relevant.
 Specifically, the Condorcet-Kemeny method does
 not indicate how such "tied" sequence scores
 should be resolved, whereas VoteFair popularity
@@ -4396,7 +4396,7 @@ pre-sort calculations.
 This time contrasts with the slow execution
 times  of the "NP-hard" approach, in which
 every sequence score is calculated in order to
-find the sequence with the highest score. 
+find the sequence with the highest score.
 If every sequence score were calculated (from
 scratch), the calculation time would be
 proportional to:
@@ -7234,12 +7234,35 @@ sub check_vote_info_numbers
             @tally_uses_of_question_and_choice_number = ( ) ;
             $within_ballots = $global_false ;
             $global_case_specific_warning_begin = "case-" . $global_case_number . "-warning-message:\n" . "word-case-capitalized " . $global_case_number ;
+            next ;
+
+
+#-----------------------------------------------
+#  If a case number is not defined, assume a
+#  case number of one.
+
+        } elsif ( not( defined( $global_case_number ) ) )
+        {
+            $global_case_number = 1 ;
+            if ( $global_logging_info == $global_true ) { print LOGOUT "[case number not yet encountered, so case number is assumed to be one]" } ;
+        }
+
+
+#-----------------------------------------------
+#  If the ignore-case flag for the current case
+#  number has not yet been initialized, then
+#  initialize it.
+
+        if ( not( defined( $global_true_or_false_ignore_case[ $global_case_number ] ) ) )
+        {
+           $global_true_or_false_ignore_case[ $global_case_number ] = $global_false ;
+        }
 
 
 #-----------------------------------------------
 #  Handle the code for a question number.
 
-        } elsif ( $current_vote_info_number == $global_voteinfo_code_for_question_number )
+        if ( $current_vote_info_number == $global_voteinfo_code_for_question_number )
         {
             $status_pair_just_handled = $global_true ;
             if ( $global_true_or_false_ignore_case[ $global_case_number ] == $global_true )
@@ -7537,7 +7560,7 @@ sub check_vote_info_numbers
 #-----------------------------------------------
 #  If the code was not recognized, indicate this
 #  situation in the log file, but do not indicate
-#  and error (because it will be ignored).
+#  an error (because it will be ignored).
 
         } else
         {
