@@ -21,9 +21,9 @@ WINDOWS OS: INSTALLING STRAWBERRY PERL
 The Windows operating system (unlike Linux and Mac OS X) does not include support for the Perl language,
 which is needed for this module.  The easiest way to support Perl on Windows is to install Strawberry Perl
 from: www.strawberryperl.com (and accept the default installation location).  After installing Strawberry
-Perl, go to the Start Menu and (in Windows 7) type "perl" and click on the "Perl (command line)" link.  
-That action will put you into a command-line environment where you can type the commands (followed by 
-pressing the Enter key) that are described below.  To exit this environment, either type the "exit" 
+Perl, go to the Start Menu and (in Windows 7) type "perl" and click on the "Perl (command line)" link.
+That action will put you into a command-line environment where you can type the commands (followed by
+pressing the Enter key) that are described below.  To exit this environment, either type the "exit"
 command or close the window.
 
 
@@ -41,7 +41,7 @@ within the Strawberry Perl download.
     libgcc_s_sjlj-1.dll
 
 However, these Perl files are not easy to find for non-experts, and their copyright license does not allow
-making them available separately, so instructions for using this minimalistic approach (which is portable 
+making them available separately, so instructions for using this minimalistic approach (which is portable
 across Windows PCs) is not explained here.  (This is the environment in which the GitHub version of VoteFair
 ranking was developed.)
 
@@ -50,7 +50,7 @@ ranking was developed.)
 INSTALLATION INSTRUCTIONS
 
 From a command line (on Linux/Unix or Mac OS X or using Strawberry Perl on Windows), execute the following
-commands.  These commands download (through your internet connection) and install the CPAN installer 
+commands.  These commands download (through your internet connection) and install the CPAN installer
 ("cpanm") and the Voting::VoteFairRanking and Language::Dashrep modules from the CPAN archives (which are
 mirrored on servers in hundreds of locations throughout the world):
 
@@ -64,9 +64,9 @@ After successfully executing these commands, download from the CPSolver account 
 definitions in the Vote-Info-Split-Join project, and put them into a new folder/directory.  If you are using a
 Windows PC and need specific instructions, here they are:  In your web browser go to www.GitHub.com and search
 for "visj" and click on the link to "cpsolver / Vote-Info-Split-Join-VISJ".  Then click the "Downloads" tab, and
-then click the "Download as zip" button, and choose to save the file.  Next, using Windows explorer (not IE), 
-navigate to wherever you saved the file (usually the "Downloads" folder) and double-click that file, and then 
-double-click the (only) folder you now see, and then select all the files (using Ctrl-A), and copy them 
+then click the "Download as zip" button, and choose to save the file.  Next, using Windows explorer (not IE),
+navigate to wherever you saved the file (usually the "Downloads" folder) and double-click that file, and then
+double-click the (only) folder you now see, and then select all the files (using Ctrl-A), and copy them
 (using Ctrl-C), and navigate to a new folder (named something like VoteFairRankingArea), and paste the copied
 files (using Ctrl-V).
 
@@ -75,8 +75,8 @@ files (using Ctrl-V).
 RUNNING THE VOTE-INFO-SPLIT-JOIN DEMO
 
 In your Perl-aware command-line interface (Strawberry Perl for Windows OS, or any Linux or Mac OS X command-line
-"terminal"), use the "cd" (change-directory) command to navigate to the folder/directory into which you put the 
-VISJ files.  (Hints: Use the Tab key for automatic completion of folder names, and use the "ls" command 
+"terminal"), use the "cd" (change-directory) command to navigate to the folder/directory into which you put the
+VISJ files.  (Hints: Use the Tab key for automatic completion of folder names, and use the "ls" command
 (or "dir" in Strawberry Perl) to find out where you are.)
 
 Then enter the following commands:
@@ -109,8 +109,8 @@ The output of the "votefair_ranking_sample.pl" software are the following files:
 VOTE-INFO-SPLIT-JOIN FRAMEWORK FOR ELECTION USAGE
 
 After you have successfully executed the supplied VISJ demo, you can adapt the VISJ files to handle your
-election data if it is in XML (which includes EML).  This calculation method is slow, but it uses the 
-Dashrep programming language which may be easier to understand compared to understanding a programming 
+election data if it is in XML (which includes EML).  This calculation method is slow, but it uses the
+Dashrep programming language which may be easier to understand compared to understanding a programming
 language such as Perl.
 
 In this framework the VoteFair-ranking software does not have access to the names of candidates or political
@@ -127,6 +127,9 @@ to your needs:
 
     votefair_specific_visj_language_en.txt  (determines the output language, which is currently English)
 
+(Note: The instructions in this README file assume you are using the Dashrep-language software version
+that is on CPAN.  If instead you are getting the software from GitHub, note that the latest version of
+the Dashrep language may not be compatible with the current version of the VoteFair ranking software.)
 
 
 DOCUMENTATION AND SUPPORT
