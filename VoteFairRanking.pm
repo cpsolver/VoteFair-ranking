@@ -18,11 +18,11 @@ Voting::VoteFairRanking - Calculates VoteFair Ranking results
 
 =head1 VERSION
 
-Version 5.01
+Version 5.02
 
 =cut
 
-our $VERSION = '5.01' ;
+our $VERSION = '5.02' ;
 
 
 =head1 SYNOPSIS
