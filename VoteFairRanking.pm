@@ -639,7 +639,6 @@ sub votefair_read_calculate_write
         if ( $global_logging_info == $global_true ) { print LOGOUT "[no results calculated]" . "\n\n" } ;
     } else
     {
-        $global_pointer_to_output_results = 0 ;
         $next_result_code = &votefair_get_next_result_info_number( ) ;
 #        if ( $global_logging_info == $global_true ) { print LOGOUT "[out: " . $next_result_code . "]" } ;
         while ( $next_result_code != $global_voteinfo_code_for_end_of_all_cases )
@@ -1190,7 +1189,6 @@ sub votefair_do_calculations_all_questions
     $global_pointer_to_output_results = 0 ;
     @global_output_results = ( ) ;
     $global_output_results[ $global_pointer_to_output_results ] = $global_voteinfo_code_for_end_of_all_cases ;
-    $global_pointer_to_output_results = 0 ;
 
 
 #-----------------------------------------------
