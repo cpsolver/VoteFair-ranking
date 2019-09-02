@@ -54,7 +54,7 @@ Alternatively, this module can be accessed from any Perl software by directly us
 
 =back
 
-(c) Copyright 1991 through 2011 Richard Fobes at www.VoteFair.org.  You can redistribute and/or modify this VoteFairRanking library module under the Perl Artistic license version 2.0 (a copy of which is included in the LICENSE file).  As required by the license this full copyright notice must be included in all copies of this software.
+(c) Copyright 1991 through 2019 Richard Fobes at www.VoteFair.org.  You can redistribute and/or modify this VoteFairRanking library module under the Perl Artistic license version 2.0 (a copy of which is included in the LICENSE file).  As required by the license this full copyright notice must be included in all copies of this software.
 
 Conversion of this code into another programming language is also covered by the above license terms.
 
@@ -231,6 +231,7 @@ my $global_false ;
 
 #  Input and output codes that identify
 #  the meaning of the next number in the (coded) list.
+#  These are NOT in the same order as the negative-number codes.
 
 my $global_voteinfo_code_for_start_of_all_cases ;
 my $global_voteinfo_code_for_end_of_all_cases ;
@@ -241,6 +242,7 @@ my $global_voteinfo_code_for_start_of_all_vote_info ;
 my $global_voteinfo_code_for_end_of_all_vote_info ;
 my $global_voteinfo_code_for_start_of_ballot ;
 my $global_voteinfo_code_for_end_of_ballot ;
+#  The following ballot count indicates how many ballots have the same ranking.
 my $global_voteinfo_code_for_ballot_count ;
 my $global_voteinfo_code_for_choice ;
 my $global_voteinfo_code_for_tie ;
@@ -6412,7 +6414,7 @@ sub do_full_initialization
 
     $global_combined_case_number_and_question_number = "" ;
     $global_combined_case_number_and_question_number_and_choice_number = "" ;
-     $global_pairwise_matrix_text = "" ;
+    $global_pairwise_matrix_text = "" ;
     $global_case_specific_warning_begin = "" ;
     $global_question_specific_warning_begin = "" ;
 
@@ -6967,6 +6969,7 @@ sub write_numeric_code_definitions
     $heading_text = "Definition that initializes the error message" ;
     $phrase_name = "output-error-message" ;
     print CODEFILE $heading_begin . $heading_text . $heading_end . $phrase_name . ":\n-----\n\n\n" ;
+
 
     print CODEFILE "\n\n\n" . $heading_begin . "End of Dashrep definitions" . $heading_end . "dashrep-definitions-end" . "\n\n" ;
 
