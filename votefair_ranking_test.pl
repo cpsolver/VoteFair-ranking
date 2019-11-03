@@ -344,6 +344,17 @@ $global_expected_result = "case 1 q 1 plurality ch 1 plur 0 ch 2 plur 0 ch 3 plu
 
 
 #-------------------------------------------
+
+$global_being_tested = "specify number of representation levels to compute -- ";
+
+$global_vote_info = "request-rep   number-rep-levels-to-compute   2   request-no-party   case 1  q 1  choices 7   x 1 q 1  1 2 3 4 5 6 7   x 1 q 1  2 4 1 3 7 5 6   x 3 q 1  4 2 1 3 5 6 7   endcase" ;
+
+$global_expected_result = "rep-seq ch 4 next-level ch 1 tie ch 2 next-level" ;
+
+&do_test( );
+
+
+#-------------------------------------------
 #  Write results, including the count of
 #  successful tests.
 
