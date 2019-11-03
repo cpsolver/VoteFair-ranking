@@ -292,6 +292,7 @@ my $global_voteinfo_code_for_end_of_votefair_party_ranking_levels_results ;
 my $global_voteinfo_code_for_true_or_false_request_only_plurality_results ;
 my $global_voteinfo_code_for_true_or_false_request_votefair_representation_rank ;
 my $global_voteinfo_code_for_true_or_false_request_votefair_party_rank ;
+my $global_voteinfo_code_for_number_of_representation_levels_to_compute ;
 
 #  Lists related to input.
 
@@ -327,6 +328,7 @@ my $global_combined_case_number_and_question_number_and_choice_number ;
 #  what other choices to make.
 
 my $global_true_or_false_request_votefair_popularity_rank ;
+my $global_true_or_false_always_request_votefair_popularity_rank ;
 my $global_true_or_false_request_only_plurality_results ;
 my $global_true_or_false_always_request_only_plurality_results ;
 my $global_true_or_false_request_no_pairwise_counts ;
@@ -336,6 +338,7 @@ my $global_true_or_false_always_request_votefair_representation_rank ;
 my $global_true_or_false_request_votefair_party_rank ;
 my $global_true_or_false_always_request_votefair_party_rank ;
 my $global_true_or_false_request_dashrep_phrases_in_output ;
+my $global_number_of_representation_levels_to_compute ;
 
 #  Miscellaneous variables.
 
@@ -1439,8 +1442,14 @@ sub votefair_always_do_rep_and_party_ranking
 #  and VoteFair party ranking always be done.
 
     $global_true_or_false_always_request_only_plurality_results = $global_false ;
+    $global_true_or_false_always_request_votefair_popularity_rank = $global_true ;
     $global_true_or_false_always_request_votefair_representation_rank = $global_true ;
     $global_true_or_false_always_request_votefair_party_rank = $global_true ;
+
+    $global_true_or_false_request_only_plurality_results = $global_true_or_false_always_request_only_plurality_results ;
+    $global_true_or_false_request_votefair_popularity_rank = $global_true_or_false_always_request_votefair_popularity_rank ;
+    $global_true_or_false_request_votefair_representation_rank = $global_true_or_false_always_request_votefair_representation_rank ;
+    $global_true_or_false_request_votefair_party_rank = $global_true_or_false_always_request_votefair_party_rank ;
 
 
 #-----------------------------------------------
@@ -6344,11 +6353,19 @@ sub do_full_initialization
 #  Initialize the "always" versions of the
 #  requests for specified results.
 
+    $global_true_or_false_always_request_votefair_popularity_rank = $global_true ;
     $global_true_or_false_always_request_only_plurality_results = $global_false ;
     $global_true_or_false_always_request_no_pairwise_counts = $global_false ;
     $global_true_or_false_always_request_votefair_representation_rank = $global_false ;
     $global_true_or_false_always_request_votefair_party_rank = $global_false ;
     $global_true_or_false_always_request_dashrep_phrases_in_output = $global_false ;
+
+    $global_true_or_false_request_votefair_popularity_rank = $global_true_or_false_always_request_votefair_popularity_rank ;
+    $global_true_or_false_request_only_plurality_results = $global_true_or_false_always_request_only_plurality_results ;
+    $global_true_or_false_request_no_pairwise_counts = $global_true_or_false_always_request_no_pairwise_counts ;
+    $global_true_or_false_request_votefair_representation_rank = $global_true_or_false_always_request_votefair_representation_rank ;
+    $global_true_or_false_request_votefair_party_rank = $global_true_or_false_always_request_votefair_party_rank ;
+    $global_true_or_false_request_dashrep_phrases_in_output = $global_true_or_false_always_request_dashrep_phrases_in_output ;
 
 
 #-----------------------------------------------
@@ -6966,10 +6983,17 @@ sub write_numeric_code_definitions
     $letters = "request-no-pairwise-counts" ;
     $global_code_number_for_letters{ $letters } = $next_code ;
 
+    $next_code -- ;
+    $heading_text = "Code that specifies number of representation levels to compute" ;
+    $global_voteinfo_code_for_number_of_representation_levels_to_compute = $next_code ;
+    $phrase_name = "voteinfo-code-for-number-of-representation-levels-to-compute" ;
+    print CODEFILE $heading_begin . $heading_text . $heading_end . $phrase_name . ":\n" . $next_code . $end_definition . $text_inverse_part_1 . sprintf( "%d" , -( $next_code ) ) . $text_inverse_part_2 . $phrase_name . $end_definition ;
+    $letters = "number-rep-levels-to-compute" ;
+    $global_code_number_for_letters{ $letters } = $next_code ;
+
     $heading_text = "Definition that initializes the error message" ;
     $phrase_name = "output-error-message" ;
     print CODEFILE $heading_begin . $heading_text . $heading_end . $phrase_name . ":\n-----\n\n\n" ;
-
 
     print CODEFILE "\n\n\n" . $heading_begin . "End of Dashrep definitions" . $heading_end . "dashrep-definitions-end" . "\n\n" ;
 
@@ -7474,6 +7498,17 @@ sub check_vote_info_numbers
 
 
 #-----------------------------------------------
+#  Handle the code for the number of representation levels to calculate.
+
+        } elsif ( $current_vote_info_number == $global_voteinfo_code_for_number_of_representation_levels_to_compute )
+        {
+            $status_pair_just_handled = $global_true ;
+            $global_representation_levels_requested = $next_vote_info_number ;
+          	$global_true_or_false_request_votefair_representation_rank = $global_true ;
+            if ( $global_logging_info == $global_true ) { print LOGOUT "[rank_levels_to_compute " . $global_representation_levels_requested . "]" } ;
+
+
+#-----------------------------------------------
 #  Handle the code for a request to calculate
 #  VoteFair representation ranking results,
 #  VoteFair party ranking results, or only do
@@ -7491,70 +7526,114 @@ sub check_vote_info_numbers
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_only_plurality_results = $global_true ;
+                $global_true_or_false_request_only_plurality_results = $global_true_or_false_always_request_only_plurality_results ;
+                $global_true_or_false_always_request_no_pairwise_counts = $global_true ;
+                $global_true_or_false_request_no_pairwise_counts = $global_true_or_false_always_request_no_pairwise_counts ;
+                $global_true_or_false_always_request_votefair_representation_rank = $global_false ;
+            	$global_true_or_false_request_votefair_representation_rank = $global_true_or_false_always_request_votefair_representation_rank ;
+                $global_true_or_false_always_request_votefair_party_rank = $global_false ;
+                $global_true_or_false_request_votefair_party_rank = $global_true_or_false_always_request_votefair_party_rank ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for only plurality counts]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+                $global_true_or_false_request_only_plurality_results = $global_true ;
+                $global_true_or_false_request_no_pairwise_counts = $global_true ;
+            	$global_true_or_false_request_votefair_representation_rank = $global_false ;
+                $global_true_or_false_request_votefair_party_rank = $global_false ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for only plurality counts]\n" } ;
             }
         } elsif ( $current_vote_info_number == $global_voteinfo_code_for_request_pairwise_counts )
         {
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_no_pairwise_counts = $global_false ;
+                $global_true_or_false_request_no_pairwise_counts = $global_true_or_false_always_request_no_pairwise_counts ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for pairwise counts]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+                $global_true_or_false_request_no_pairwise_counts = $global_false ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for pairwise counts]\n" } ;
             }
         } elsif ( $current_vote_info_number == $global_voteinfo_code_for_request_no_pairwise_counts )
         {
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_no_pairwise_counts = $global_true ;
+                $global_true_or_false_request_no_pairwise_counts = $global_true_or_false_always_request_no_pairwise_counts ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for no pairwise counts]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+                $global_true_or_false_request_no_pairwise_counts = $global_true ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for no pairwise counts]\n" } ;
             }
         } elsif ( $current_vote_info_number == $global_voteinfo_code_for_request_votefair_representation_rank )
         {
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_votefair_representation_rank = $global_true ;
+            	$global_true_or_false_request_votefair_representation_rank = $global_true_or_false_always_request_votefair_representation_rank ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for VoteFair representation ranking results]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+            	$global_true_or_false_request_votefair_representation_rank = $global_true ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for VoteFair representation ranking results]\n" } ;
             }
         } elsif ( $current_vote_info_number == $global_voteinfo_code_for_request_no_votefair_representation_rank )
         {
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_votefair_representation_rank = $global_false ;
+            	$global_true_or_false_request_votefair_representation_rank = $global_true_or_false_always_request_votefair_representation_rank ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for no VoteFair representation ranking results]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+            	$global_true_or_false_request_votefair_representation_rank = $global_false ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for no VoteFair representation ranking results]\n" } ;
             }
         } elsif ( $current_vote_info_number == $global_voteinfo_code_for_request_votefair_party_rank )
         {
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_votefair_party_rank = $global_true ;
+            	$global_true_or_false_request_votefair_party_rank = $global_true_or_false_always_request_votefair_party_rank ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for VoteFair party ranking results]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+            	$global_true_or_false_request_votefair_party_rank = $global_true ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for VoteFair party ranking results]\n" } ;
             }
         } elsif ( $current_vote_info_number == $global_voteinfo_code_for_request_no_votefair_party_rank )
         {
             if ( $global_case_number < 1 )
             {
                 $global_true_or_false_always_request_votefair_party_rank = $global_false ;
+                $global_true_or_false_request_votefair_party_rank = $global_true_or_false_always_request_votefair_party_rank ;
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found all-cases request for no VoteFair party ranking results]\n" } ;
             } elsif ( $global_current_total_vote_count > 0 )
             {
                 if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found special request after first ballot started, this request will be ignored]\n" } ;
+            } else
+            {
+            	$global_true_or_false_request_votefair_party_rank = $global_false ;
+                if ( $global_logging_info == $global_true ) { print LOGOUT "\n[found case-specific request for no VoteFair party ranking results]\n" } ;
             }
 
 
@@ -7650,19 +7729,6 @@ sub calculate_results_for_one_question
 
     if ( $global_logging_info == $global_true ) { print LOGOUT "[one question, beginning to do calculations for question " . $global_question_number . "]\n" } ;
     $global_question_specific_warning_begin = "case-" . $global_case_number . "-question-" . $global_question_number . "-warning-message:\n" . "word-case-capitalized " . $global_case_number . " word-question " . $global_question_number ;
-
-
-#-----------------------------------------------
-#  Initialize the flags that determine whether
-#  or not to do VoteFair representation ranking
-#  and VoteFair party ranking.  These flags
-#  can change (below) if requested for this case.
-
-    $global_true_or_false_request_votefair_popularity_rank = $global_true ;
-    $global_true_or_false_request_only_plurality_results = $global_true_or_false_always_request_only_plurality_results ;
-    $global_true_or_false_request_no_pairwise_counts = $global_true_or_false_always_request_no_pairwise_counts ;
-    $global_true_or_false_request_votefair_representation_rank = $global_true_or_false_always_request_votefair_representation_rank ;
-    $global_true_or_false_request_votefair_party_rank = $global_true_or_false_always_request_votefair_party_rank ;
 
 
 #-----------------------------------------------
@@ -7964,16 +8030,20 @@ sub calculate_results_for_one_question
 #  requested, request at least two levels of
 #  VoteFair representation ranking results.
 
-    $global_representation_levels_requested = $global_default_representation_levels_requested ;
     if ( $global_true_or_false_request_votefair_representation_rank == $global_true )
     {
-        $global_representation_levels_requested = $global_limit_on_representation_rank_levels ;
-        if ( $global_logging_info == $global_true ) { print LOGOUT "[one question, for representation ranking, calculation limit used]\n" } ;
+        $global_representation_levels_requested = $global_default_representation_levels_requested ;
+    	if ( $global_representation_levels_requested > $global_limit_on_representation_rank_levels )
+    	{
+            $global_representation_levels_requested = $global_limit_on_representation_rank_levels ;
+            if ( $global_logging_info == $global_true ) { print LOGOUT "[one question, for representation ranking, calculation limit used]\n" } ;
+        }
     } else
     {
         $global_representation_levels_requested = 0 ;
         if ( $global_logging_info == $global_true ) { print LOGOUT "[one question, no representation ranking requested]\n" } ;
     }
+    if ( $global_logging_info == $global_true ) { print LOGOUT "[representation ranking levels requested is " . $global_representation_levels_requested . "]\n" } ;
     if ( $global_true_or_false_request_votefair_party_rank == $global_true )
     {
         if ( $global_representation_levels_requested < 2 )
