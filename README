@@ -1,5 +1,11 @@
 VoteFair-ranking
 
+Please go to the latest version of VoteFair Ranking software at VoteFair-ranking-cpp, which is the newer version, written in the C++ language.
+
+This older version of the software can be used for documentation, and for history purposes.
+
+------------------
+
 This module calculates VoteFair ranking results.  VoteFair ranking consists of:
 
 * VoteFair popularity ranking.  This voting method calculates the full popularity ranking of all candidates (or choices in the case of a survey or poll) from most popular and second-most popular down to least popular.  It uses the preference information collected on 1-2-3 ballots (or any equivalent way of expressing "ranked" preferences).  When a single position is being filled, the most popular candidate is declared the winner.  This calculation method is mathematically equivalent to the Condorcet-Kemeny election method.
